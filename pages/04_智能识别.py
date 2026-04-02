@@ -1,6 +1,5 @@
 # 1. 最顶部：屏蔽所有警告（包含Streamlit废弃参数警告）
 import warnings
-
 warnings.filterwarnings("ignore")
 
 # 2. 补全所有必要导入
@@ -117,18 +116,19 @@ hr {
 </style>
 """, unsafe_allow_html=True)
 
-# 5. 全局配置（强制CPU）
+# ====================== 【云端修复关键】 ======================
 DEVICE = torch.device("cpu")
-MODEL_PATH = r"D:\roof_final\roof_final_best.pth"
 
-# 【关键】替换为你真实的17个类别
+# 正确相对路径 → 本地/云端 100% 找到
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "roof_final_best.pth")
+
+# 17个类别
 CLASSES = [
     '万字顶', '三川脊顶', '勾连搭顶', '阁顶', '庑殿顶', '悬山顶',
     '扇面顶', '攒尖顶', '歇山顶', '燕尾顶', '盝顶', '盔顶',
     '硬山顶', '马鞍脊顶', '类别15', '类别16', '类别17'
 ]
 NUM_CLASSES = len(CLASSES)
-
 
 # 6. 模型加载
 @st.cache_resource(show_spinner="🔄 正在加载古建筑识别模型...")
@@ -143,9 +143,7 @@ def load_model() -> nn.Module:
     model.eval()
     return model
 
-
 main_model = load_model()
-
 
 # 7. 图像预处理
 def preprocess_image(image_pil: Image.Image) -> torch.Tensor:
@@ -155,7 +153,6 @@ def preprocess_image(image_pil: Image.Image) -> torch.Tensor:
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
     return transform(image_pil).unsqueeze(0).to(DEVICE)
-
 
 # 8. 模型推理
 def predict_single_image(model: nn.Module, input_tensor: torch.Tensor) -> Tuple[str, float]:
@@ -168,16 +165,13 @@ def predict_single_image(model: nn.Module, input_tensor: torch.Tensor) -> Tuple[
     confidence_score = confidence.item() * 100
     return pred_class, confidence_score
 
-
-# -------------------------- 9. 页面UI（最终修复版） --------------------------
+# -------------------------- 9. 页面UI --------------------------
 st.markdown("<h1>古建筑屋顶智能识别</h1>", unsafe_allow_html=True)
 st.markdown("<h2>上传屋顶图片，一键识别古建筑屋顶类型</h2>", unsafe_allow_html=True)
 
-# 分栏布局
 col1, col2 = st.columns([2, 1], gap="large")
 
 with col1:
-    # 上传区域
     with st.container(border=True):
         st.subheader("图片上传")
         uploaded_file = st.file_uploader(
@@ -186,41 +180,23 @@ with col1:
             label_visibility="collapsed"
         )
 
-        if st.button("使用示例图片测试", use_container_width=True):
-            example_img_path = r"D:\roof_final\test.jpg"
-            if os.path.exists(example_img_path):
-                uploaded_file = open(example_img_path, "rb")
-                st.success("已加载示例图片：文瀛公园万字楼")
-
-    # 识别逻辑
     if uploaded_file is not None:
         if st.button("开始识别", type="primary", use_container_width=True):
             with st.spinner("正在识别古建筑屋顶类型..."):
                 start_time = time.time()
-
                 img = Image.open(uploaded_file).convert("RGB")
                 input_tensor = preprocess_image(img)
                 pred_class, conf_score = predict_single_image(main_model, input_tensor)
                 elapsed_time = time.time() - start_time
 
-                # 结果展示
                 with st.container(border=True):
                     st.subheader("识别结果")
-
-                    # ====================== 核心修改 ======================
-                    # 左边 1/2 放图片，右边 1/2 放文字
-                    # 整体 col1 是 2/3 宽度 → 图片 = 1/3，文字 = 1/3
                     col_img, col_text = st.columns(2)
-
                     with col_img:
-                        with warnings.catch_warnings():
-                            warnings.simplefilter("ignore")
-                            st.image(img, caption="上传的屋顶图片", use_column_width=True)
-
+                        st.image(img, caption="上传的屋顶图片", use_column_width=True)
                     with col_text:
                         st.metric(label="小类别识别", value=pred_class)
                         st.metric(label="置信度", value=f"{conf_score:.2f}%")
-
                         class_to_large = {
                             '万字顶': '园林顶（艺术型）',
                             '三川脊顶': '园林顶（艺术型）',
@@ -245,7 +221,6 @@ with col1:
                         st.info(f"⚡ 识别耗时：{elapsed_time:.3f} 秒")
 
 with col2:
-    # 说明区域
     with st.container(border=True):
         st.subheader("识别说明")
         st.markdown("""
@@ -263,8 +238,5 @@ with col2:
 - **攒尖顶**：多用于亭、台、楼、阁，造型灵动优美
         """)
 
-# 页脚
 st.markdown("---")
-st.markdown(
-    "<p style='text-align: center; color: #666; font-size: 0.9rem;'>© 2026古建筑屋顶智能识别系统 | 传承中式美学 · 赋能文化数字化</p>",
-    unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #666; font-size: 0.9rem'>© 2026古建筑屋顶智能识别系统 | 传承中式美学 · 赋能文化数字化</p>", unsafe_allow_html=True)
