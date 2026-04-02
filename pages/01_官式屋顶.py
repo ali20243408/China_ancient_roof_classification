@@ -184,7 +184,7 @@ with col_left:
             explode=explode,
             labels=labels,
             colors=red_palette,
-            autopct="%1.2f%%",
+            autopct="%1.2f%",
             startangle=90,
             wedgeprops={"linewidth":2, "edgecolor":"white"},
             textprops={"fontsize": 8, "family": "SimHei", "color": "#333"}
@@ -218,7 +218,7 @@ with col_left:
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
         st.markdown("""<div class="analysis"><b>分析：</b><br>屋顶等级与数量呈反比；等级越低数量越多，高等级屋顶严格限量，体现了封建等级制度。</div>""", unsafe_allow_html=True)
 
 # ------------------------------
@@ -230,7 +230,7 @@ with col_mid:
     for i, name in enumerate(button_order[:3]):
         info = roof_info[name]
         with row1[i]:
-            st.image(info["img"], caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
+            st.image(info["img"], width="stretch", caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
             if st.button("详情", key=name):
                 st.session_state.selected = name
                 st.rerun()
@@ -239,7 +239,7 @@ with col_mid:
     for i, name in enumerate(button_order[3:]):
         info = roof_info[name]
         with row2[i]:
-            st.image(info["img"], caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
+            st.image(info["img"], width="stretch", caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
             if st.button("详情", key=f"b_{name}"):
                 st.session_state.selected = name
                 st.rerun()
@@ -264,7 +264,7 @@ with col_mid:
         """, unsafe_allow_html=True)
         real_img_path = f"photos/images/{s}1.jpg"
         try:
-            st.image(real_img_path, caption=f"{s} 真实建筑", use_container_width=True)
+            st.image(real_img_path, caption=f"{s} 真实建筑", width="stretch")
         except:
             st.warning(f"未找到真实图片：{real_img_path}")
 
@@ -299,7 +299,7 @@ with col_right:
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width="stretch")
         st.markdown("""<div class="analysis"><b>分析：</b><br>高等级屋顶（重檐庑殿顶、重檐歇山顶）仅存于故宫与沈阳故宫，体现皇家建筑的等级特权；地方衙署以硬山顶、悬山顶为主，横向对比映射等级规制。</div>""", unsafe_allow_html=True)
 
 # ------------------------------
@@ -325,5 +325,5 @@ with col_right:
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
         st.markdown("""<div class="analysis"><b>分析：</b><br>建筑规制越高，屋顶样式种类越丰富。皇家建筑群样式最全，地方官署、县衙样式逐级减少，彰显古代建筑礼制的层级秩序。</div>""", unsafe_allow_html=True)

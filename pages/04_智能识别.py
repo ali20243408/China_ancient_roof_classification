@@ -193,7 +193,7 @@ with col1:
                     st.subheader("识别结果")
                     col_img, col_text = st.columns(2)
                     with col_img:
-                        st.image(img, caption="上传的屋顶图片", use_column_width=True)
+                        st.image(img, caption="上传的屋顶图片", width="stretch")
                     with col_text:
                         st.metric(label="小类别识别", value=pred_class)
                         st.metric(label="置信度", value=f"{conf_score:.2f}%")

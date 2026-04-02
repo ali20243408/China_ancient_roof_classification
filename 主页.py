@@ -101,7 +101,7 @@ st.markdown(
 
     /* 4. 左侧导航栏：同主页颜色（强制覆盖子页面样式） */
     [data-testid="stSidebar"] {{
-        background-color: rgba(253, 249, 242, 1) !important;
+        background-color: rgba253, 249, 242, 1) !important;
         border: none !important;
         background-image: none !important;
     }}
@@ -157,9 +157,9 @@ captions = [
     "智能识别"
 ]
 
-# 循环渲染（完全保留原有逻辑）
+# 循环渲染（改width="stretch"）
 for col, img_path, caption, page_path in zip(cols, img_paths, captions, page_file_paths):
     with col:
-        st.image(str(img_path), use_container_width=True)
+        st.image(str(img_path), width="stretch")
         if st.button(caption, key=caption, use_container_width=True):
             st.switch_page(page_path)

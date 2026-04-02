@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import plotly.graph_objects as go
 
 # --------------------------
 # 页面配置
@@ -181,27 +180,27 @@ if "current_page" not in st.session_state:
 # --------------------------
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    st.image(roof_info["燕尾脊顶"]["icon"], use_container_width=True)
+    st.image(roof_info["燕尾脊顶"]["icon"], width="stretch")
     if st.button("燕尾脊顶", use_container_width=True):
         st.session_state.current_page = "燕尾脊顶"
 with c2:
-    st.image(roof_info["三川脊顶"]["icon"], use_container_width=True)
+    st.image(roof_info["三川脊顶"]["icon"], width="stretch")
     if st.button("三川脊顶", use_container_width=True):
         st.session_state.current_page = "三川脊顶"
 with c3:
-    st.image(roof_info["马鞍脊顶"]["icon"], use_container_width=True)
+    st.image(roof_info["马鞍脊顶"]["icon"], width="stretch")
     if st.button("马鞍脊顶", use_container_width=True):
         st.session_state.current_page = "马鞍脊顶"
 with c4:
-    st.image(roof_info["单坡顶"]["icon"], use_container_width=True)
+    st.image(roof_info["单坡顶"]["icon"], width="stretch")
     if st.button("单坡顶", use_container_width=True):
         st.session_state.current_page = "单坡顶"
 with c5:
-    st.image(roof_info["囤顶"]["icon"], use_container_width=True)
+    st.image(roof_info["囤顶"]["icon"], width="stretch")
     if st.button("囤顶", use_container_width=True):
         st.session_state.current_page = "囤顶"
 with c6:
-    st.image("photos/images2/总览.jpg", use_container_width=True)
+    st.image("photos/images2/总览.jpg", width="stretch")
     if st.button("总览", use_container_width=True):
         st.session_state.current_page = "总览"
 
@@ -249,8 +248,8 @@ if selected != "总览":
         st.markdown(roof_info[selected]["intro"])
 
     with col_pic:
-        st.image(roof_info[selected]["imgs"][0], use_container_width=True)
-        st.image(roof_info[selected]["imgs"][1], use_container_width=True)
+        st.image(roof_info[selected]["imgs"][0], width="stretch")
+        st.image(roof_info[selected]["imgs"][1], width="stretch")
 
 else:
     # ========= 总览页面 =========
@@ -310,7 +309,7 @@ else:
             link=dict(source=sources, target=targets, value=values, color=link_colors)
         ))
         fig.update_layout(title_text="", font_size=12, font_color="#6b574a", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=500)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col_info:
         st.markdown('<div class="secondary-title">中国民居屋顶样式总览</div>', unsafe_allow_html=True)

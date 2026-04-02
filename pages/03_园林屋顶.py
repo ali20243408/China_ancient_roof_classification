@@ -58,14 +58,15 @@ st.title("中国古典园林屋顶数据可视化系统")
 df = pd.read_excel("data/园林总.xlsx")
 build_types = ["亭", "阁", "榭", "轩", "馆", "廊"]
 
-# ====================== 绘图函数 ======================
+# ====================== 绘图函数（修复seaborn警告） ======================
 def make_bar(roof_type, df_data, b_types, palette):
     sub_df = df_data[df_data["屋顶类型"] == roof_type]
     cnt = sub_df["建筑类型"].value_counts().reset_index(name="数量")
     cnt = cnt.set_index("建筑类型").reindex(b_types, fill_value=0).reset_index()
 
     fig, ax = plt.subplots(figsize=(6, 3))
-    sns.barplot(x="建筑类型", y="数量", data=cnt, palette=palette, ax=ax)
+    # ✅ 核心修复：加hue+legend=False，彻底消seaborn警告
+    sns.barplot(x="建筑类型", y="数量", data=cnt, palette=palette, hue="建筑类型", legend=False, ax=ax)
 
     ax.set_title(f"【{roof_type}】各园林建筑数量分布", fontsize=12, fontfamily="SimHei")
     ax.set_xlabel("建筑类型", fontfamily="SimHei")
@@ -85,21 +86,21 @@ with col_left:
     st.subheader("屋顶选型")
     st.write("")
     st.write("")
-    st.image("photos/image3/攒尖顶.jpg", width=250)
+    st.image("photos/image3/攒尖顶.jpg", width="stretch")
     if st.button("攒尖顶", key="zanjian"):
         st.session_state.view = "攒尖顶"
 
     st.write("")
     st.write("")
     st.write("")
-    st.image("photos/image3/十字脊顶.jpg", width=250)
+    st.image("photos/image3/十字脊顶.jpg", width="stretch")
     if st.button("十字脊顶", key="shizi"):
         st.session_state.view = "十字脊顶"
 
     st.write("")
     st.write("")
     st.write("")
-    st.image("photos/image3/勾连搭顶.jpg", width=250)
+    st.image("photos/image3/勾连搭顶.jpg", width="stretch")
     if st.button("勾连搭顶", key="goul"):
         st.session_state.view = "勾连搭顶"
 
@@ -108,21 +109,21 @@ with col_right:
     st.subheader("特色形制")
     st.write("")
     st.write("")
-    st.image("photos/image3/扇面顶.jpg", width=250)
+    st.image("photos/image3/扇面顶.jpg", width="stretch")
     if st.button("扇面顶", key="shanm"):
         st.session_state.view = "扇面顶"
 
     st.write("")
     st.write("")
     st.write("")
-    st.image("photos/image3/万字顶.jpg", width=250)
+    st.image("photos/image3/万字顶.jpg", width="stretch")
     if st.button("万字顶", key="wanz"):
         st.session_state.view = "万字顶"
 
     st.write("")
     st.write("")
     st.write("")
-    st.image("photos/image3/总览.jpg", width=250)
+    st.image("photos/image3/总览.jpg", width="stretch")
     if st.button("整体总览", key="all_view"):
         st.session_state.view = "总览"
 
@@ -191,7 +192,7 @@ with col_mid:
                 paper_bgcolor="#878162",
                 plot_bgcolor="#878162"
             )
-            st.plotly_chart(fig_s, use_container_width=True)
+            st.plotly_chart(fig_s, width="stretch")
         except Exception as e:
             st.info(f"桑基图展示: {e}")
 
