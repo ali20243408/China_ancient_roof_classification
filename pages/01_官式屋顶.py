@@ -1,4 +1,18 @@
 import streamlit as st
+
+# 👇 直接粘贴在这里 👇
+# 全局修复中文乱码
+import plotly.io as pio
+pio.templates["cloud_cn"] = pio.templates["plotly"]
+pio.templates["cloud_cn"].layout.font.update(
+    family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif"
+)
+pio.templates.default = "cloud_cn"
+
+import matplotlib.pyplot as plt
+plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei"]
+plt.rcParams["axes.unicode_minus"] = False
+import streamlit as st
 import pandas as pd
 import plotly.express as px
 from plotly.subplots import make_subplots
