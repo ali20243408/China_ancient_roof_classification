@@ -1,3 +1,23 @@
+# 全局解决 Streamlit 云端中文乱码问题
+import plotly.io as pio
+
+# 配置 Plotly 全局字体，优先使用云端自带的文泉驿微米黑
+pio.templates["custom_china_font"] = pio.templates["plotly"]
+pio.templates["custom_china_font"].layout.font.update(
+    family="WenQuanYi Micro Hei, DejaVu Sans, SimHei, Microsoft YaHei, sans-serif",
+    size=14,
+    color="#333333"
+)
+# 设为默认模板，所有图表自动生效
+pio.templates.default = "custom_china_font"
+
+# 兼容 Matplotlib 中文（如果项目中使用了Matplotlib图表）
+try:
+    import matplotlib.pyplot as plt
+    plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
+    plt.rcParams["axes.unicode_minus"] = False  # 解决负号显示为方块
+except ImportError:
+    pass
 import streamlit as st
 from pathlib import Path
 
