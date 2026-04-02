@@ -183,15 +183,17 @@ col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 # ------------------------------
 with col_left:
     with st.container(border=False):
-        st.markdown('<p class="chart_title">故宫屋顶样式占比</p >', unsafe_allow_html=True)
+        st.markdown('<p class="chart_title">故宫屋顶样式占比</p>', unsafe_allow_html=True)
         labels = button_order
         sizes = roof_counts
         red_palette = ["#8B0000", "#A52A2A", "#B22222", "#CD5C5C", "#F08080", "#FA8072"]
         explode = [0.0]*6
         if st.session_state.selected is not None:
             explode[labels.index(st.session_state.selected)] = 0.1
+
         fig, ax = plt.subplots(figsize=(8,8), facecolor="#E8D9C0")
         ax.set_facecolor("#E8D9C0")
+
         wedges, texts, autotexts = ax.pie(
             sizes,
             explode=explode,
@@ -199,20 +201,24 @@ with col_left:
             colors=red_palette,
             autopct="%1.2f%%",
             startangle=90,
-            wedgeprops={"linewidth":2, "edgecolor":"white"},
-            # 👇 核心修改：把SimHei改成云端优先的WenQuanYi Micro Hei
+            wedgeprops={"linewidth": 2, "edgecolor":"white"},
             textprops={"fontsize": 8, "family": "WenQuanYi Micro Hei", "color": "#333"}
         )
-        # 👇 给百分比标签+标签，二次强制字体，彻底兜底
+
+        # 百分比标签
         for autotext in autotexts:
             autotext.set_color("white")
             autotext.set_fontweight("bold")
             autotext.set_fontfamily("WenQuanYi Micro Hei")
+
+        # 标签
         for text in texts:
             text.set_fontfamily("WenQuanYi Micro Hei")
-        # 👇 终极兜底：遍历图表所有文本，强制改字体
-        for text in fig.findobj(text.Text):
+
+        # 👇 关键修复：用 plt.Text，绝对不报错
+        for text in fig.findobj(plt.Text):
             text.set_fontfamily("WenQuanYi Micro Hei")
+
         ax.axis("equal")
         st.pyplot(fig)
         st.markdown("""<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""", unsafe_allow_html=True)

@@ -89,7 +89,7 @@ def make_bar(roof_type, df_data, b_types, palette):
     plt.xticks(rotation=0, fontfamily="WenQuanYi Micro Hei")
     plt.yticks(fontfamily="WenQuanYi Micro Hei")
 
-    # 👇 用plt.Text，不用额外导入，彻底不报错
+    # 遍历所有文本，强制改字体
     for text in fig.findobj(plt.Text):
         text.set_fontfamily("WenQuanYi Micro Hei")
 

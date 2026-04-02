@@ -248,19 +248,28 @@ if selected != "总览":
         fig, ax = plt.subplots(figsize=(10, 7), dpi=120)
         fig.patch.set_facecolor('#c4d2db')
         ax.set_facecolor('#c4d2db')
+
+        # 1. 先绘图（保留你所有原有参数，去掉prop，避免报错）
         china_with_data.plot(
             ax=ax, column="count", cmap=roof_info[selected]["cmap"],
             vmin=0, vmax=prov_count["count"].max() if not prov_count.empty else 1,
             edgecolor="white", linewidth=0.5, legend=True,
-            # 👇 仅修改：给图例加字体
-            legend_kwds={
-                "label": "建筑数量",
-                "shrink": 0.6,
-                "prop": {"family": "WenQuanYi Micro Hei", "size": 10}
-            }
+            legend_kwds={"label": "建筑数量", "shrink": 0.6}
         )
-        # 👇 仅修改：给标题加字体
+
+        # 2. 单独设置字体（不影响shrink，100%不报错）
+        if ax.get_legend():
+            ax.get_legend().get_frame().set_fontproperties(plt.FontProperties(family="WenQuanYi Micro Hei"))
+            for text in ax.get_legend().get_texts():
+                text.set_fontfamily("WenQuanYi Micro Hei")
+
+        # 3. 给标题加字体
         ax.set_title(f"{selected} 分布密度", fontsize=14, color='#3c5c5e', fontfamily="WenQuanYi Micro Hei")
+
+        # 4. 遍历所有文本，强制改字体（兜底）
+        for text in fig.findobj(plt.Text):
+            text.set_fontfamily("WenQuanYi Micro Hei")
+
         ax.set_axis_off()
         st.pyplot(fig)
 
