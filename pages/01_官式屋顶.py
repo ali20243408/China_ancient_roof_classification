@@ -1,17 +1,16 @@
-import streamlit as st
+# 全局Matplotlib字体（饼图、地图）
+import matplotlib.pyplot as plt
+plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
+plt.rcParams["axes.unicode_minus"] = False
+plt.rcParams["font.family"] = "sans-serif"
 
-# 👇 直接粘贴在这里 👇
-# 全局修复中文乱码
+# 全局Plotly字体（桑基图、柱状图）
 import plotly.io as pio
 pio.templates["cloud_cn"] = pio.templates["plotly"]
 pio.templates["cloud_cn"].layout.font.update(
     family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif"
 )
 pio.templates.default = "cloud_cn"
-
-import matplotlib.pyplot as plt
-plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei"]
-plt.rcParams["axes.unicode_minus"] = False
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -201,11 +200,19 @@ with col_left:
             autopct="%1.2f%%",
             startangle=90,
             wedgeprops={"linewidth":2, "edgecolor":"white"},
-            textprops={"fontsize": 8, "family": "SimHei", "color": "#333"}
+            # 👇 核心修改：把SimHei改成云端优先的WenQuanYi Micro Hei
+            textprops={"fontsize": 8, "family": "WenQuanYi Micro Hei", "color": "#333"}
         )
-        for autotexts in autotexts:
-            autotexts.set_color("white")
-            autotexts.set_fontweight("bold")
+        # 👇 给百分比标签+标签，二次强制字体，彻底兜底
+        for autotext in autotexts:
+            autotext.set_color("white")
+            autotext.set_fontweight("bold")
+            autotext.set_fontfamily("WenQuanYi Micro Hei")
+        for text in texts:
+            text.set_fontfamily("WenQuanYi Micro Hei")
+        # 👇 终极兜底：遍历图表所有文本，强制改字体
+        for text in fig.findobj(text.Text):
+            text.set_fontfamily("WenQuanYi Micro Hei")
         ax.axis("equal")
         st.pyplot(fig)
         st.markdown("""<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""", unsafe_allow_html=True)

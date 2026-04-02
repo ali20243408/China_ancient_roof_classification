@@ -1,7 +1,10 @@
-import streamlit as st
+# 全局Matplotlib字体（柱状图中文修复）
+import matplotlib.pyplot as plt
+plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
+plt.rcParams["axes.unicode_minus"] = False
+plt.rcParams["font.family"] = "sans-serif"
 
-# 👇 直接粘贴在这里 👇
-# 全局修复中文乱码
+# 全局Plotly字体（桑基图中文修复）
 import plotly.io as pio
 pio.templates["cloud_cn"] = pio.templates["plotly"]
 pio.templates["cloud_cn"].layout.font.update(
@@ -9,9 +12,8 @@ pio.templates["cloud_cn"].layout.font.update(
 )
 pio.templates.default = "cloud_cn"
 
-import matplotlib.pyplot as plt
-plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei"]
-plt.rcParams["axes.unicode_minus"] = False
+# 导入Text，用于fig.findobj
+from matplotlib.text import Text
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -81,11 +83,15 @@ def make_bar(roof_type, df_data, b_types, palette):
     fig, ax = plt.subplots(figsize=(6, 3))
     sns.barplot(x="建筑类型", y="数量", data=cnt, palette=palette, ax=ax)
 
-    ax.set_title(f"【{roof_type}】各园林建筑数量分布", fontsize=12, fontfamily="SimHei")
-    ax.set_xlabel("建筑类型", fontfamily="SimHei")
-    ax.set_ylabel("统计数量", fontfamily="SimHei")
-    plt.xticks(rotation=0, fontfamily="SimHei")
-    plt.yticks(fontfamily="SimHei")
+    ax.set_title(f"【{roof_type}】各园林建筑数量分布", fontsize=12, fontfamily="WenQuanYi Micro Hei")
+    ax.set_xlabel("建筑类型", fontfamily="WenQuanYi Micro Hei")
+    ax.set_ylabel("统计数量", fontfamily="WenQuanYi Micro Hei")
+    plt.xticks(rotation=0, fontfamily="WenQuanYi Micro Hei")
+    plt.yticks(fontfamily="WenQuanYi Micro Hei")
+
+    # 👇 用plt.Text，不用额外导入，彻底不报错
+    for text in fig.findobj(plt.Text):
+        text.set_fontfamily("WenQuanYi Micro Hei")
 
     ax.grid(axis="y", alpha=0.3)
     plt.tight_layout()

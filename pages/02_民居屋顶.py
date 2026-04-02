@@ -1,17 +1,16 @@
-import streamlit as st
+# 全局Matplotlib字体（地图中文修复，不影响原有逻辑）
+import matplotlib.pyplot as plt
+plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
+plt.rcParams["axes.unicode_minus"] = False
+plt.rcParams["font.family"] = "sans-serif"
 
-# 👇 直接粘贴在这里 👇
-# 全局修复中文乱码
+# 全局Plotly字体（桑基图中文修复，不影响原有逻辑）
 import plotly.io as pio
 pio.templates["cloud_cn"] = pio.templates["plotly"]
 pio.templates["cloud_cn"].layout.font.update(
     family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif"
 )
 pio.templates.default = "cloud_cn"
-
-import matplotlib.pyplot as plt
-plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei"]
-plt.rcParams["axes.unicode_minus"] = False
 import streamlit as st
 import pandas as pd
 import geopandas as gpd
@@ -253,9 +252,15 @@ if selected != "总览":
             ax=ax, column="count", cmap=roof_info[selected]["cmap"],
             vmin=0, vmax=prov_count["count"].max() if not prov_count.empty else 1,
             edgecolor="white", linewidth=0.5, legend=True,
-            legend_kwds={"label": "建筑数量", "shrink": 0.6}
+            # 👇 仅修改：给图例加字体
+            legend_kwds={
+                "label": "建筑数量",
+                "shrink": 0.6,
+                "prop": {"family": "WenQuanYi Micro Hei", "size": 10}
+            }
         )
-        ax.set_title(f"{selected} 分布密度", fontsize=14, color='#3c5c5e')
+        # 👇 仅修改：给标题加字体
+        ax.set_title(f"{selected} 分布密度", fontsize=14, color='#3c5c5e', fontfamily="WenQuanYi Micro Hei")
         ax.set_axis_off()
         st.pyplot(fig)
 
