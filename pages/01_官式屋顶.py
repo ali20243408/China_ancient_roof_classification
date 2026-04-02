@@ -178,21 +178,26 @@ if "selected" not in st.session_state:
 # ------------------------------
 col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 
-# ====================== 重点：饼图彻底换成Plotly云端不乱码版 ======================
+# ====================== 重点：饼图彻底修复（Plotly正确写法）======================
 # ------------------------------
-# 左侧1：饼图（替换为Plotly，和你原图配色/样式一致）
+# 左侧1：饼图（修复参数错误，云端不乱码）
 # ------------------------------
 with col_left:
     with st.container(border=False):
         st.markdown('<p class="chart_title">故宫屋顶样式占比</p>', unsafe_allow_html=True)
 
-        labels = button_order
-        sizes = roof_counts
+        # 构造饼图专用DataFrame（Plotly要求）
+        df_pie = pd.DataFrame({
+            "屋顶样式": button_order,
+            "数量": roof_counts
+        })
         red_palette = ["#8B0000", "#A52A2A", "#B22222", "#CD5C5C", "#F08080", "#FA8072"]
 
+        # 正确的px.pie写法：用DataFrame作为数据源
         fig = px.pie(
-            values=sizes,
-            names=labels,
+            df_pie,
+            values="数量",
+            names="屋顶样式",
             color_discrete_sequence=red_palette,
             startangle=90
         )
