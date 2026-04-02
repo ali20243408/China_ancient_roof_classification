@@ -80,7 +80,7 @@ st.markdown(
         width: 100% !important;
     }}
 
-    /* 3. 按钮：浅棕色 + 透明感（最高优先级，强制覆盖子页面样式） */
+    /* 3. 按钮：浅棕色 + 透明感（最高优先级，强制覆盖子页面蓝色样式） */
     .stButton>button {{
         width: 100% !important;
         background-color: rgba(180, 140, 100, 0.25) !important;
@@ -157,9 +157,9 @@ captions = [
     "智能识别"
 ]
 
-# 循环渲染（改width="stretch"）
+# 循环渲染（完全保留原有逻辑）
 for col, img_path, caption, page_path in zip(cols, img_paths, captions, page_file_paths):
     with col:
-        st.image(str(img_path), width="stretch")
+        st.image(str(img_path), use_container_width=True)
         if st.button(caption, key=caption, use_container_width=True):
             st.switch_page(page_path)
