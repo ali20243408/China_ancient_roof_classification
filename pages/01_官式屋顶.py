@@ -178,41 +178,38 @@ if "selected" not in st.session_state:
 # ------------------------------
 col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 
-# ====================== 重点：饼图彻底修复（Plotly正确写法）======================
 # ------------------------------
-# 左侧1：饼图（修复参数错误，云端不乱码）
+# 左侧1：饼图（零报错修复版）
 # ------------------------------
 with col_left:
     with st.container(border=False):
         st.markdown('<p class="chart_title">故宫屋顶样式占比</p>', unsafe_allow_html=True)
 
-        # 构造饼图专用DataFrame（Plotly要求）
         df_pie = pd.DataFrame({
             "屋顶样式": button_order,
             "数量": roof_counts
         })
         red_palette = ["#8B0000", "#A52A2A", "#B22222", "#CD5C5C", "#F08080", "#FA8072"]
 
-        # 正确的px.pie写法：用DataFrame作为数据源
         fig = px.pie(
             df_pie,
             values="数量",
             names="屋顶样式",
             color_discrete_sequence=red_palette,
-            startangle=90
+            rotation=90  # ✅ 替换startangle，Plotly原生支持
         )
 
         fig.update_traces(
             textinfo="label+percent",
             texttemplate="%{label}<br>%{percent:.2f}%",
-            textfont=dict(family="WenQuanYi Micro Hei", size=10),
+            textfont=dict(family="WenQuanYi Micro Hei, SimHei", size=10),
             marker=dict(line=dict(color="white", width=2))
         )
 
         fig.update_layout(
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0",
-            font=dict(family="WenQuanYi Micro Hei")
+            font=dict(family="WenQuanYi Micro Hei, SimHei")
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -222,7 +219,7 @@ with col_left:
             unsafe_allow_html=True)
 
     # ------------------------------
-    # 左侧2：故宫屋顶等级-数量与占比（补全云端字体）
+    # 左侧2：故宫屋顶等级-数量与占比
     # ------------------------------
     with st.container(border=False):
         st.markdown('<p class="chart_title">故宫屋顶等级-数量与占比</p>', unsafe_allow_html=True)
@@ -300,7 +297,7 @@ with col_mid:
             st.warning(f"未找到真实图片：{real_img_path}")
 
 # ------------------------------
-# 右侧1：六大建筑群屋顶全景对比（补全云端字体）
+# 右侧1：六大建筑群屋顶全景对比
 # ------------------------------
 with col_right:
     with st.container(border=False):
@@ -343,7 +340,7 @@ with col_right:
             unsafe_allow_html=True)
 
     # ------------------------------
-    # 右侧2：屋顶等级结构占比（补全云端字体）
+    # 右侧2：屋顶等级结构占比
     # ------------------------------
     with st.container(border=False):
         st.markdown('<p class="chart_title">屋顶等级结构占比</p>', unsafe_allow_html=True)
