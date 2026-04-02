@@ -1,0 +1,19 @@
+# Streamlit 核心框架（所有页面的基础）
+streamlit>=1.35.0
+
+# 深度学习相关（智能识别模块）
+torch>=2.2.0
+torchvision>=0.17.0
+pillow>=10.3.0
+
+# 数据处理与可视化（所有页面的图表、地图）
+pandas>=2.2.0
+geopandas>=0.14.4
+matplotlib>=3.8.0
+plotly>=5.22.0
+
+# Excel 数据读取（所有数据文件的加载）
+openpyxl>=3.1.2
+
+# 系统工具（路径、类型提示等）
+typing-extensions>=4.11.0
