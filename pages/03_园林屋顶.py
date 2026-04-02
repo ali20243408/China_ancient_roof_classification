@@ -7,9 +7,10 @@ import plotly.graph_objects as go
 # ====================== 页面基础配置 ======================
 st.set_page_config(page_title="园林屋顶样式可视化", layout="wide")
 
-# 全局字体防乱码
-plt.rcParams["font.sans-serif"] = ["SimHei"]
+# 全局字体防乱码（和01、02完全一致，云端Linux兼容）
+plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei", "DejaVu Sans", "Arial Unicode MS"]
 plt.rcParams["axes.unicode_minus"] = False
+plt.rcParams["font.family"] = "sans-serif"
 
 # 页面背景 + 小标题背景 + 大标题颜色 + 按钮样式 + 图片边框
 st.markdown("""
@@ -58,15 +59,14 @@ st.title("中国古典园林屋顶数据可视化系统")
 df = pd.read_excel("data/园林总.xlsx")
 build_types = ["亭", "阁", "榭", "轩", "馆", "廊"]
 
-# ====================== 绘图函数（修复seaborn警告） ======================
+# ====================== 绘图函数 ======================
 def make_bar(roof_type, df_data, b_types, palette):
     sub_df = df_data[df_data["屋顶类型"] == roof_type]
     cnt = sub_df["建筑类型"].value_counts().reset_index(name="数量")
     cnt = cnt.set_index("建筑类型").reindex(b_types, fill_value=0).reset_index()
 
     fig, ax = plt.subplots(figsize=(6, 3))
-    # ✅ 核心修复：加hue+legend=False，彻底消seaborn警告
-    sns.barplot(x="建筑类型", y="数量", data=cnt, palette=palette, hue="建筑类型", legend=False, ax=ax)
+    sns.barplot(x="建筑类型", y="数量", data=cnt, palette=palette, ax=ax)
 
     ax.set_title(f"【{roof_type}】各园林建筑数量分布", fontsize=12, fontfamily="SimHei")
     ax.set_xlabel("建筑类型", fontfamily="SimHei")
@@ -86,21 +86,21 @@ with col_left:
     st.subheader("屋顶选型")
     st.write("")
     st.write("")
-    st.image("photos/image3/攒尖顶.jpg", width="stretch")
+    st.image("photos/image3/攒尖顶.jpg", width=250)
     if st.button("攒尖顶", key="zanjian"):
         st.session_state.view = "攒尖顶"
 
     st.write("")
     st.write("")
     st.write("")
-    st.image("photos/image3/十字脊顶.jpg", width="stretch")
+    st.image("photos/image3/十字脊顶.jpg", width=250)
     if st.button("十字脊顶", key="shizi"):
         st.session_state.view = "十字脊顶"
 
     st.write("")
     st.write("")
     st.write("")
-    st.image("photos/image3/勾连搭顶.jpg", width="stretch")
+    st.image("photos/image3/勾连搭顶.jpg", width=250)
     if st.button("勾连搭顶", key="goul"):
         st.session_state.view = "勾连搭顶"
 
@@ -109,21 +109,21 @@ with col_right:
     st.subheader("特色形制")
     st.write("")
     st.write("")
-    st.image("photos/image3/扇面顶.jpg", width="stretch")
+    st.image("photos/image3/扇面顶.jpg", width=250)
     if st.button("扇面顶", key="shanm"):
         st.session_state.view = "扇面顶"
 
     st.write("")
     st.write("")
     st.write("")
-    st.image("photos/image3/万字顶.jpg", width="stretch")
+    st.image("photos/image3/万字顶.jpg", width=250)
     if st.button("万字顶", key="wanz"):
         st.session_state.view = "万字顶"
 
     st.write("")
     st.write("")
     st.write("")
-    st.image("photos/image3/总览.jpg", width="stretch")
+    st.image("photos/image3/总览.jpg", width=250)
     if st.button("整体总览", key="all_view"):
         st.session_state.view = "总览"
 
@@ -215,7 +215,7 @@ with col_mid:
 以通透无压的空间感，实现建筑与山水自然相融，是园林“天人合一”的灵动之美。
 """)
         fig = make_bar("攒尖顶", df, build_types, "Blues")
-        st.pyplot(fig)
+        st.pyplot(fig, width="stretch")
         c1, c2, c3 = st.columns([1,2,1])
         with c2:
             st.image("photos/image3/攒尖顶1.jpg", width=400)
@@ -230,7 +230,7 @@ with col_mid:
 彰显皇家威严与礼制秩序，是北方园林“大气庄重、礼制森严”的雄浑之美。
 """)
         fig = make_bar("十字脊顶", df, build_types, "Reds")
-        st.pyplot(fig)
+        st.pyplot(fig, width="stretch")
         c1, c2, c3 = st.columns([1,2,1])
         with c2:
             st.image("photos/image3/十字脊顶1.jpg", width=400)
@@ -246,7 +246,7 @@ with col_mid:
 形成连续舒展的屋面景观，是园林“步移景异、空间流转”的韵律之美。
 """)
         fig = make_bar("勾连搭顶", df, build_types, "Purples")
-        st.pyplot(fig)
+        st.pyplot(fig, width="stretch")
         c1, c2, c3 = st.columns([1,2,1])
         with c2:
             st.image("photos/image3/勾连搭顶1.jpg", width=400)
@@ -263,7 +263,7 @@ with col_mid:
 它的扇形平面与水面、山石等自然元素完美融合，是江南园林“师法自然，灵动雅致”的婉约之美。
 """)
         fig = make_bar("扇面顶", df, build_types, "Oranges")
-        st.pyplot(fig)
+        st.pyplot(fig, width="stretch")
         c1, c2, c3 = st.columns([1,2,1])
         with c2:
             st.image("photos/image3/扇面顶1.jpg", width=400)
@@ -280,7 +280,7 @@ with col_mid:
 以“卍”字为平面原型，将汉字符号转化为建筑造型，以复杂形制承载吉祥寓意，是皇家园林“字筑相融、尊卑有序”的华贵之美。
 """)
         fig = make_bar("万字顶", df, build_types, "Greens")
-        st.pyplot(fig)
+        st.pyplot(fig, width="stretch")
         c1, c2, c3 = st.columns([1,2,1])
         with c2:
             st.image("photos/image3/万字顶1.jpg", width=400)

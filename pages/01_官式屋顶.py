@@ -4,6 +4,7 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+import os
 
 # ------------------------------
 # 页面配置
@@ -15,7 +16,15 @@ st.set_page_config(
 )
 
 # ------------------------------
-# 样式：只去掉按钮边框，其余完全不变
+# 【核心修复1：中文乱码 云端+本地双兼容】
+# ------------------------------
+# 强制设置中文字体，解决在线Linux环境中文方框问题
+plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei", "DejaVu Sans", "Arial Unicode MS"]
+plt.rcParams["axes.unicode_minus"] = False  # 解决负号显示问题
+plt.rcParams["font.family"] = "sans-serif"
+
+# ------------------------------
+# 样式：完全保留原有设计，仅确保在线兼容
 # ------------------------------
 st.markdown("""
 <style>
@@ -116,18 +125,12 @@ div[data-testid="stVerticalBlock"] .element-container:nth-last-child(2) {
 """, unsafe_allow_html=True)
 
 # ------------------------------
-# 解决Matplotlib中文乱码
-# ------------------------------
-plt.rcParams["font.sans-serif"] = ["SimHei", "WenQuanYi Micro Hei", "Heiti TC"]
-plt.rcParams["axes.unicode_minus"] = False
-
-# ------------------------------
-# 顶部大标题（文字内容不变，只变大）
+# 顶部大标题（文字内容不变）
 # ------------------------------
 st.markdown('<p class="main_title"> 六大主流官式屋顶样式 映射中国古代封建等级制度文化</p >', unsafe_allow_html=True)
 
 # ------------------------------
-# 核心数据
+# 核心数据（完全不变）
 # ------------------------------
 button_order = [
     "重檐庑殿顶",
@@ -155,18 +158,18 @@ df_roof_level = pd.DataFrame({
 })
 
 # ------------------------------
-# 初始化选中状态
+# 初始化选中状态（完全不变）
 # ------------------------------
 if "selected" not in st.session_state:
     st.session_state.selected = None
 
 # ------------------------------
-# 三栏布局
+# 三栏布局（完全不变）
 # ------------------------------
 col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 
 # ------------------------------
-# 左侧1：饼图
+# 左侧1：饼图（✅ 核心修复2：解决ValueError，补全x参数）
 # ------------------------------
 with col_left:
     with st.container(border=False):
@@ -179,25 +182,27 @@ with col_left:
             explode[labels.index(st.session_state.selected)] = 0.1
         fig, ax = plt.subplots(figsize=(8,8), facecolor="#E8D9C0")
         ax.set_facecolor("#E8D9C0")
+        # ✅ 修复：必须显式传入x=sizes，解决ValueError
         wedges, texts, autotexts = ax.pie(
-            sizes,
+            x=sizes,
             explode=explode,
             labels=labels,
             colors=red_palette,
-            autopct="%1.2f%",
+            autopct="%1.2f%%",
             startangle=90,
             wedgeprops={"linewidth":2, "edgecolor":"white"},
             textprops={"fontsize": 8, "family": "SimHei", "color": "#333"}
         )
-        for autotexts in autotexts:
-            autotexts.set_color("white")
-            autotexts.set_fontweight("bold")
+        for autotext in autotexts:
+            autotext.set_color("white")
+            autotext.set_fontweight("bold")
         ax.axis("equal")
-        st.pyplot(fig)
+        # ✅ 修复：use_container_width → width="stretch"
+        st.pyplot(fig, width="stretch")
         st.markdown("""<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""", unsafe_allow_html=True)
 
 # ------------------------------
-# 左侧2：故宫屋顶等级-数量与占比
+# 左侧2：故宫屋顶等级-数量与占比（✅ 修复width）
 # ------------------------------
     with st.container(border=False):
         st.markdown('<p class="chart_title">故宫屋顶等级-数量与占比</p >', unsafe_allow_html=True)
@@ -218,11 +223,12 @@ with col_left:
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
+        # ✅ 修复：use_container_width → width="stretch"
         st.plotly_chart(fig2, width="stretch")
         st.markdown("""<div class="analysis"><b>分析：</b><br>屋顶等级与数量呈反比；等级越低数量越多，高等级屋顶严格限量，体现了封建等级制度。</div>""", unsafe_allow_html=True)
 
 # ------------------------------
-# 中间区域
+# 中间区域（✅ 修复所有图片width）
 # ------------------------------
 with col_mid:
     st.markdown('<p class="title">六大屋顶样式</p >', unsafe_allow_html=True)
@@ -230,6 +236,7 @@ with col_mid:
     for i, name in enumerate(button_order[:3]):
         info = roof_info[name]
         with row1[i]:
+            # ✅ 修复：use_container_width → width="stretch"
             st.image(info["img"], width="stretch", caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
             if st.button("详情", key=name):
                 st.session_state.selected = name
@@ -239,6 +246,7 @@ with col_mid:
     for i, name in enumerate(button_order[3:]):
         info = roof_info[name]
         with row2[i]:
+            # ✅ 修复：use_container_width → width="stretch"
             st.image(info["img"], width="stretch", caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
             if st.button("详情", key=f"b_{name}"):
                 st.session_state.selected = name
@@ -264,12 +272,13 @@ with col_mid:
         """, unsafe_allow_html=True)
         real_img_path = f"photos/images/{s}1.jpg"
         try:
+            # ✅ 修复：use_container_width → width="stretch"
             st.image(real_img_path, caption=f"{s} 真实建筑", width="stretch")
         except:
             st.warning(f"未找到真实图片：{real_img_path}")
 
 # ------------------------------
-# 右侧1：六大建筑群屋顶全景对比
+# 右侧1：六大建筑群屋顶全景对比（✅ 修复width）
 # ------------------------------
 with col_right:
     with st.container(border=False):
@@ -299,11 +308,12 @@ with col_right:
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
+        # ✅ 修复：use_container_width → width="stretch"
         st.plotly_chart(fig3, width="stretch")
         st.markdown("""<div class="analysis"><b>分析：</b><br>高等级屋顶（重檐庑殿顶、重檐歇山顶）仅存于故宫与沈阳故宫，体现皇家建筑的等级特权；地方衙署以硬山顶、悬山顶为主，横向对比映射等级规制。</div>""", unsafe_allow_html=True)
 
 # ------------------------------
-# 右侧2：屋顶等级结构占比
+# 右侧2：屋顶等级结构占比（✅ 修复width）
 # ------------------------------
     with st.container(border=False):
         st.markdown('<p class="chart_title">屋顶等级结构占比</p >', unsafe_allow_html=True)
@@ -325,5 +335,6 @@ with col_right:
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
+        # ✅ 修复：use_container_width → width="stretch"
         st.plotly_chart(fig4, width="stretch")
         st.markdown("""<div class="analysis"><b>分析：</b><br>建筑规制越高，屋顶样式种类越丰富。皇家建筑群样式最全，地方官署、县衙样式逐级减少，彰显古代建筑礼制的层级秩序。</div>""", unsafe_allow_html=True)

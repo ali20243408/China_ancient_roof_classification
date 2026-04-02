@@ -80,7 +80,7 @@ st.markdown(
         width: 100% !important;
     }}
 
-    /* 3. 按钮：浅棕色 + 透明感（最高优先级，强制覆盖子页面蓝色样式） */
+    /* 3. 按钮：浅棕色 + 透明感（最高优先级，强制覆盖子页面样式） */
     .stButton>button {{
         width: 100% !important;
         background-color: rgba(180, 140, 100, 0.25) !important;
@@ -101,7 +101,7 @@ st.markdown(
 
     /* 4. 左侧导航栏：同主页颜色（强制覆盖子页面样式） */
     [data-testid="stSidebar"] {{
-        background-color: rgba253, 249, 242, 1) !important;
+        background-color: rgba(253, 249, 242, 1) !important;
         border: none !important;
         background-image: none !important;
     }}

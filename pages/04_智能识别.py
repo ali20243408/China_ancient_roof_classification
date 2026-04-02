@@ -172,7 +172,7 @@ st.markdown("<h2>上传屋顶图片，一键识别古建筑屋顶类型</h2>", u
 col1, col2 = st.columns([2, 1], gap="large")
 
 with col1:
-    with st.container(border=True):
+    with st.container():
         st.subheader("图片上传")
         uploaded_file = st.file_uploader(
             "选择屋顶图片",
@@ -181,7 +181,7 @@ with col1:
         )
 
     if uploaded_file is not None:
-        if st.button("开始识别", type="primary", use_container_width=True):
+        if st.button("开始识别", type="primary"):
             with st.spinner("正在识别古建筑屋顶类型..."):
                 start_time = time.time()
                 img = Image.open(uploaded_file).convert("RGB")
@@ -189,7 +189,7 @@ with col1:
                 pred_class, conf_score = predict_single_image(main_model, input_tensor)
                 elapsed_time = time.time() - start_time
 
-                with st.container(border=True):
+                with st.container():
                     st.subheader("识别结果")
                     col_img, col_text = st.columns(2)
                     with col_img:
@@ -221,7 +221,7 @@ with col1:
                         st.info(f"⚡ 识别耗时：{elapsed_time:.3f} 秒")
 
 with col2:
-    with st.container(border=True):
+    with st.container():
         st.subheader("识别说明")
         st.markdown("""
 - **模型架构**：MobileNetV2 轻量级深度学习架构
