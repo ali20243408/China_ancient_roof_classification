@@ -1,3 +1,23 @@
+# 🔥 全局强制中文字体（必须放在文件最开头，所有import之前）
+import matplotlib.pyplot as plt
+# 1. 强制Matplotlib优先使用云端Linux预装的文泉驿微米黑
+plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
+plt.rcParams["axes.unicode_minus"] = False  # 解决负号方块
+plt.rcParams["font.family"] = "sans-serif"  # 强制默认字体族
+plt.rcParams["font.size"] = 10  # 统一字体大小，避免渲染异常
+
+# 2. 强制Plotly全局字体（桑基图、柱状图）
+import plotly.io as pio
+pio.templates["custom_font"] = pio.templates["plotly"]
+pio.templates["custom_font"].layout.font.update(
+    family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif",
+    size=12,
+    color="#333333"
+)
+pio.templates.default = "custom_font"
+
+# 3. 导入Text类，解决fig.findobj报错
+from matplotlib.text import Text
 # 全局Matplotlib字体（饼图、地图）
 import matplotlib.pyplot as plt
 plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
@@ -201,22 +221,20 @@ with col_left:
             colors=red_palette,
             autopct="%1.2f%%",
             startangle=90,
-            wedgeprops={"linewidth": 2, "edgecolor":"white"},
-            textprops={"fontsize": 8, "family": "WenQuanYi Micro Hei", "color": "#333"}
+            wedgeprops={"linewidth": 2, "edgecolor": "white"},
+            # 👇 核心：强制指定文泉驿，优先级最高
+            textprops={"fontsize": 10, "family": "WenQuanYi Micro Hei", "color": "#333"}
         )
-
-        # 百分比标签
+        # 给百分比标签二次强制
         for autotext in autotexts:
             autotext.set_color("white")
             autotext.set_fontweight("bold")
             autotext.set_fontfamily("WenQuanYi Micro Hei")
-
-        # 标签
+        # 给标签二次强制
         for text in texts:
             text.set_fontfamily("WenQuanYi Micro Hei")
-
-        # 👇 关键修复：用 plt.Text，绝对不报错
-        for text in fig.findobj(plt.Text):
+        # 终极兜底：遍历图表所有文本，强制改字体
+        for text in fig.findobj(Text):
             text.set_fontfamily("WenQuanYi Micro Hei")
 
         ax.axis("equal")

@@ -1,3 +1,23 @@
+# 🔥 全局强制中文字体（必须放在文件最开头，所有import之前）
+import matplotlib.pyplot as plt
+# 1. 强制Matplotlib优先使用云端Linux预装的文泉驿微米黑
+plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
+plt.rcParams["axes.unicode_minus"] = False  # 解决负号方块
+plt.rcParams["font.family"] = "sans-serif"  # 强制默认字体族
+plt.rcParams["font.size"] = 10  # 统一字体大小，避免渲染异常
+
+# 2. 强制Plotly全局字体（桑基图、柱状图）
+import plotly.io as pio
+pio.templates["custom_font"] = pio.templates["plotly"]
+pio.templates["custom_font"].layout.font.update(
+    family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif",
+    size=12,
+    color="#333333"
+)
+pio.templates.default = "custom_font"
+
+# 3. 导入Text类，解决fig.findobj报错
+from matplotlib.text import Text
 # 全局Matplotlib字体（地图中文修复，不影响原有逻辑）
 import matplotlib.pyplot as plt
 plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
@@ -256,18 +276,15 @@ if selected != "总览":
             edgecolor="white", linewidth=0.5, legend=True,
             legend_kwds={"label": "建筑数量", "shrink": 0.6}
         )
-
-        # 2. 单独设置字体（不影响shrink，100%不报错）
+        # 给标题强制字体
+        ax.set_title(f"{selected} 分布密度", fontsize=14, color='#3c5c5e', fontfamily="WenQuanYi Micro Hei")
+        # 给图例强制字体
         if ax.get_legend():
-            ax.get_legend().get_frame().set_fontproperties(plt.FontProperties(family="WenQuanYi Micro Hei"))
+            ax.get_legend().set_fontproperties(plt.FontProperties(family="WenQuanYi Micro Hei"))
             for text in ax.get_legend().get_texts():
                 text.set_fontfamily("WenQuanYi Micro Hei")
-
-        # 3. 给标题加字体
-        ax.set_title(f"{selected} 分布密度", fontsize=14, color='#3c5c5e', fontfamily="WenQuanYi Micro Hei")
-
-        # 4. 遍历所有文本，强制改字体（兜底）
-        for text in fig.findobj(plt.Text):
+        # 遍历所有文本，强制改字体
+        for text in fig.findobj(Text):
             text.set_fontfamily("WenQuanYi Micro Hei")
 
         ax.set_axis_off()
