@@ -1,9 +1,17 @@
+# .streamlit/config.toml
+[theme]
+# 适配你项目的国风配色，可根据你的设计调整
+base = "light"
+primaryColor = "#8B4513"  # 故宫红/棕色调
+backgroundColor = "#F5F0E6"  # 米黄色背景
+secondaryBackgroundColor = "#E8DCC8"
+textColor = "#333333"
+font = "sans serif"
+
 [server]
 headless = true
 port = 8501
 enableCORS = false
-enableXsrfProtection = false
 
-[theme]
-base = "light"
-primaryColor = "#b87333"
+[global]
+showWarningOnDirectExecution = false
