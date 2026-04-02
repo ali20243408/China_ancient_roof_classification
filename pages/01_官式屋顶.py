@@ -1,20 +1,18 @@
-# 🔥 全局强制中文字体（必须放在最开头，所有import之前）
+# 🔥 全局强制中文字体（必须放在文件最开头，所有import之前）
 import matplotlib.pyplot as plt
-# 1. 强制Matplotlib优先使用文泉驿，锁死字体族
+# 1. 强制Matplotlib优先使用云端Linux预装的文泉驿微米黑
 plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
-plt.rcParams["axes.unicode_minus"] = False
-plt.rcParams["font.family"] = "WenQuanYi Micro Hei"  # 直接默认字体设为文泉驿
-plt.rcParams["font.size"] = 10
-plt.rcParams["font.weight"] = "normal"
+plt.rcParams["axes.unicode_minus"] = False  # 解决负号方块
+plt.rcParams["font.family"] = "WenQuanYi Micro Hei"  # 强制默认字体族
+plt.rcParams["font.size"] = 10  # 统一字体大小，避免渲染异常
 
-# 2. 强制Plotly全局字体，锁死
+# 2. 强制Plotly全局字体（桑基图、柱状图）
 import plotly.io as pio
 pio.templates["custom_font"] = pio.templates["plotly"]
 pio.templates["custom_font"].layout.font.update(
     family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif",
     size=12,
-    color="#333333",
-    weight="normal"
+    color="#333333"
 )
 pio.templates.default = "custom_font"
 import streamlit as st
@@ -208,25 +206,20 @@ with col_left:
             autopct="%1.2f%%",
             startangle=90,
             wedgeprops={"linewidth": 2, "edgecolor": "white"},
-            # 👇 强制锁定字体，优先级最高，翻译无法覆盖
-            textprops={
-                "fontsize": 10,
-                "family": "WenQuanYi Micro Hei",
-                "color": "#333",
-                "weight": "normal"
-            }
+            # 👇 核心：强制指定文泉驿，优先级最高
+            textprops={"fontsize": 10, "family": "WenQuanYi Micro Hei", "color": "#333"}
         )
-        # 二次强制，彻底锁死
+        # 给百分比标签二次强制
         for autotext in autotexts:
             autotext.set_color("white")
             autotext.set_fontweight("bold")
             autotext.set_fontfamily("WenQuanYi Micro Hei")
+        # 给标签二次强制
         for text in texts:
             text.set_fontfamily("WenQuanYi Micro Hei")
-        # 终极兜底：遍历所有文本，强制改字体
+        # 终极兜底：遍历图表所有文本，强制改字体
         for text in fig.findobj(plt.Text):
             text.set_fontfamily("WenQuanYi Micro Hei")
-            text.set_color("#333")
 
         ax.axis("equal")
         st.pyplot(fig)

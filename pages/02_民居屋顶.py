@@ -1,35 +1,20 @@
-# 🔥 全局强制中文字体（必须放在最开头，所有import之前）
+# 🔥 全局强制中文字体（必须放在文件最开头，所有import之前）
 import matplotlib.pyplot as plt
-# 1. 强制Matplotlib优先使用文泉驿，锁死字体族
+# 1. 强制Matplotlib优先使用云端Linux预装的文泉驿微米黑
 plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
-plt.rcParams["axes.unicode_minus"] = False
-plt.rcParams["font.family"] = "WenQuanYi Micro Hei"  # 直接默认字体设为文泉驿
-plt.rcParams["font.size"] = 10
-plt.rcParams["font.weight"] = "normal"
+plt.rcParams["axes.unicode_minus"] = False  # 解决负号方块
+plt.rcParams["font.family"] = "WenQuanYi Micro Hei"  # 强制默认字体族
+plt.rcParams["font.size"] = 10  # 统一字体大小，避免渲染异常
 
-# 2. 强制Plotly全局字体，锁死
+# 2. 强制Plotly全局字体（桑基图、柱状图）
 import plotly.io as pio
 pio.templates["custom_font"] = pio.templates["plotly"]
 pio.templates["custom_font"].layout.font.update(
     family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif",
     size=12,
-    color="#333333",
-    weight="normal"
+    color="#333333"
 )
 pio.templates.default = "custom_font"
-# 全局Matplotlib字体（地图中文修复，不影响原有逻辑）
-import matplotlib.pyplot as plt
-plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
-plt.rcParams["axes.unicode_minus"] = False
-plt.rcParams["font.family"] = "sans-serif"
-
-# 全局Plotly字体（桑基图中文修复，不影响原有逻辑）
-import plotly.io as pio
-pio.templates["cloud_cn"] = pio.templates["plotly"]
-pio.templates["cloud_cn"].layout.font.update(
-    family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif"
-)
-pio.templates.default = "cloud_cn"
 import streamlit as st
 import pandas as pd
 import geopandas as gpd
@@ -276,29 +261,16 @@ if selected != "总览":
             edgecolor="white", linewidth=0.5, legend=True,
             legend_kwds={"label": "建筑数量", "shrink": 0.6}
         )
-        # 标题强制锁字体
-        ax.set_title(
-            f"{selected} 分布密度",
-            fontsize=14,
-            color='#3c5c5e',
-            fontfamily="WenQuanYi Micro Hei",
-            fontweight="bold"
-        )
-        # 图例强制锁字体
+        # 给标题强制字体
+        ax.set_title(f"{selected} 分布密度", fontsize=14, color='#3c5c5e', fontfamily="WenQuanYi Micro Hei")
+        # 给图例强制字体
         if ax.get_legend():
-            ax.get_legend().set_fontproperties(
-                plt.FontProperties(
-                    family="WenQuanYi Micro Hei",
-                    size=10,
-                    weight="normal"
-                )
-            )
+            ax.get_legend().set_fontproperties(plt.FontProperties(family="WenQuanYi Micro Hei"))
             for text in ax.get_legend().get_texts():
                 text.set_fontfamily("WenQuanYi Micro Hei")
-        # 遍历所有文本，强制锁字体
+        # 遍历所有文本，强制改字体
         for text in fig.findobj(plt.Text):
             text.set_fontfamily("WenQuanYi Micro Hei")
-            text.set_color("#333")
 
         ax.set_axis_off()
         st.pyplot(fig)
