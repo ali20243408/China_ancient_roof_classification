@@ -166,7 +166,8 @@ if "selected" not in st.session_state:
 col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 
 # ------------------------------
-# 左侧1：饼图
+# ------------------------------
+# 左侧1：饼图（云端中文不乱码版）
 # ------------------------------
 with col_left:
     with st.container(border=False):
@@ -177,8 +178,15 @@ with col_left:
         explode = [0.0]*6
         if st.session_state.selected is not None:
             explode[labels.index(st.session_state.selected)] = 0.1
+
+        # ====================== 云端专用字体：彻底解决乱码 ======================
         fig, ax = plt.subplots(figsize=(8,8), facecolor="#E8D9C0")
         ax.set_facecolor("#E8D9C0")
+
+        # 强制使用云端Linux自带字体：WenQuanYi Micro Hei
+        plt.rcParams['font.sans-serif'] = ['WenQuanYi Micro Hei','SimHei']
+        plt.rcParams['axes.unicode_minus'] = False
+
         wedges, texts, autotexts = ax.pie(
             sizes,
             explode=explode,
@@ -187,15 +195,23 @@ with col_left:
             autopct="%1.2f%%",
             startangle=90,
             wedgeprops={"linewidth":2, "edgecolor":"white"},
-            textprops={"fontsize": 8, "family": "SimHei", "color": "#333"}
+            textprops={"fontsize": 9, "family": "WenQuanYi Micro Hei", "color": "#333"}
         )
-        for autotexts in autotexts:
-            autotexts.set_color("white")
-            autotexts.set_fontweight("bold")
+
+        # 强制百分比文字也用中文字体
+        for t in autotexts:
+            t.set_color("white")
+            t.set_fontweight("bold")
+            t.set_fontfamily("WenQuanYi Micro Hei")
+
+        # 强制标签文字也用中文字体
+        for t in texts:
+            t.set_fontfamily("WenQuanYi Micro Hei")
+
         ax.axis("equal")
         st.pyplot(fig)
-        st.markdown("""<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""", unsafe_allow_html=True)
 
+        st.markdown("""<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""", unsafe_allow_html=True)
 # ------------------------------
 # 左侧2：故宫屋顶等级-数量与占比
 # ------------------------------
