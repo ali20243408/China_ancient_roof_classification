@@ -1,39 +1,22 @@
-# 🔥 全局强制中文字体（必须放在文件最开头，所有import之前）
+# 🔥 全局强制中文字体（必须放在最开头，所有import之前）
 import matplotlib.pyplot as plt
-# 1. 强制Matplotlib优先使用云端Linux预装的文泉驿微米黑
+# 1. 强制Matplotlib优先使用文泉驿，锁死字体族
 plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
-plt.rcParams["axes.unicode_minus"] = False  # 解决负号方块
-plt.rcParams["font.family"] = "sans-serif"  # 强制默认字体族
-plt.rcParams["font.size"] = 10  # 统一字体大小，避免渲染异常
+plt.rcParams["axes.unicode_minus"] = False
+plt.rcParams["font.family"] = "WenQuanYi Micro Hei"  # 直接默认字体设为文泉驿
+plt.rcParams["font.size"] = 10
+plt.rcParams["font.weight"] = "normal"
 
-# 2. 强制Plotly全局字体（桑基图、柱状图）
+# 2. 强制Plotly全局字体，锁死
 import plotly.io as pio
 pio.templates["custom_font"] = pio.templates["plotly"]
 pio.templates["custom_font"].layout.font.update(
     family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif",
     size=12,
-    color="#333333"
+    color="#333333",
+    weight="normal"
 )
 pio.templates.default = "custom_font"
-
-# 3. 导入Text类，解决fig.findobj报错
-from matplotlib.text import Text
-# 全局Matplotlib字体（柱状图中文修复）
-import matplotlib.pyplot as plt
-plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
-plt.rcParams["axes.unicode_minus"] = False
-plt.rcParams["font.family"] = "sans-serif"
-
-# 全局Plotly字体（桑基图中文修复）
-import plotly.io as pio
-pio.templates["cloud_cn"] = pio.templates["plotly"]
-pio.templates["cloud_cn"].layout.font.update(
-    family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif"
-)
-pio.templates.default = "cloud_cn"
-
-# 导入Text，用于fig.findobj
-from matplotlib.text import Text
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -103,16 +86,22 @@ def make_bar(roof_type, df_data, b_types, palette):
     fig, ax = plt.subplots(figsize=(6, 3))
     sns.barplot(x="建筑类型", y="数量", data=cnt, palette=palette, ax=ax)
 
-    # 👇 所有文本强制文泉驿
-    ax.set_title(f"【{roof_type}】各园林建筑数量分布", fontsize=12, fontfamily="WenQuanYi Micro Hei")
-    ax.set_xlabel("建筑类型", fontfamily="WenQuanYi Micro Hei")
-    ax.set_ylabel("统计数量", fontfamily="WenQuanYi Micro Hei")
-    plt.xticks(rotation=0, fontfamily="WenQuanYi Micro Hei")
-    plt.yticks(fontfamily="WenQuanYi Micro Hei")
+    # 所有文本强制锁字体
+    ax.set_title(
+        f"【{roof_type}】各园林建筑数量分布",
+        fontsize=12,
+        fontfamily="WenQuanYi Micro Hei",
+        fontweight="bold"
+    )
+    ax.set_xlabel("建筑类型", fontfamily="WenQuanYi Micro Hei", fontweight="normal")
+    ax.set_ylabel("统计数量", fontfamily="WenQuanYi Micro Hei", fontweight="normal")
+    plt.xticks(rotation=0, fontfamily="WenQuanYi Micro Hei", fontweight="normal")
+    plt.yticks(fontfamily="WenQuanYi Micro Hei", fontweight="normal")
 
-    # 遍历所有文本，强制改字体
-    for text in fig.findobj(Text):
+    # 遍历所有文本，强制锁字体
+    for text in fig.findobj(plt.Text):
         text.set_fontfamily("WenQuanYi Micro Hei")
+        text.set_color("#333")
 
     ax.grid(axis="y", alpha=0.3)
     plt.tight_layout()
