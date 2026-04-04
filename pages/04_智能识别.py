@@ -1,8 +1,8 @@
-# 屏蔽所有警告
+# 1. 最顶部：屏蔽所有警告（包含Streamlit废弃参数警告）
 import warnings
 warnings.filterwarnings("ignore")
 
-# 导入必要库
+# 2. 补全所有必要导入
 from PIL import Image
 import time
 import streamlit as st
@@ -13,7 +13,7 @@ import torchvision.transforms as transforms
 import os
 from typing import Tuple
 
-# 页面配置
+# 3. 页面配置
 st.set_page_config(
     page_title="古建筑屋顶智能识别系统",
     page_icon="🏯",
@@ -21,7 +21,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 国风CSS美化
+# 4. 国风CSS美化（保持视觉效果）
 st.markdown("""
 <style>
 /* 全局背景 */
@@ -116,11 +116,13 @@ hr {
 </style>
 """, unsafe_allow_html=True)
 
-# 设备与模型路径
+# ====================== 【云端修复关键】 ======================
 DEVICE = torch.device("cpu")
+
+# 正确相对路径 → 本地/云端 100% 找到
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "roof_final_best.pth")
 
-# 类别定义
+# 17个类别
 CLASSES = [
     '万字顶', '三川脊顶', '勾连搭顶', '阁顶', '庑殿顶', '悬山顶',
     '扇面顶', '攒尖顶', '歇山顶', '燕尾顶', '盝顶', '盔顶',
@@ -128,7 +130,7 @@ CLASSES = [
 ]
 NUM_CLASSES = len(CLASSES)
 
-# 模型加载
+# 6. 模型加载
 @st.cache_resource(show_spinner="🔄 正在加载古建筑识别模型...")
 def load_model() -> nn.Module:
     model = models.mobilenet_v2(weights=None)
@@ -143,7 +145,7 @@ def load_model() -> nn.Module:
 
 main_model = load_model()
 
-# 图像预处理
+# 7. 图像预处理
 def preprocess_image(image_pil: Image.Image) -> torch.Tensor:
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -152,7 +154,7 @@ def preprocess_image(image_pil: Image.Image) -> torch.Tensor:
     ])
     return transform(image_pil).unsqueeze(0).to(DEVICE)
 
-# 模型推理
+# 8. 模型推理
 def predict_single_image(model: nn.Module, input_tensor: torch.Tensor) -> Tuple[str, float]:
     with torch.no_grad():
         outputs = model(input_tensor)
@@ -163,7 +165,7 @@ def predict_single_image(model: nn.Module, input_tensor: torch.Tensor) -> Tuple[
     confidence_score = confidence.item() * 100
     return pred_class, confidence_score
 
-# 页面UI
+# -------------------------- 9. 页面UI --------------------------
 st.markdown("<h1>古建筑屋顶智能识别</h1>", unsafe_allow_html=True)
 st.markdown("<h2>上传屋顶图片，一键识别古建筑屋顶类型</h2>", unsafe_allow_html=True)
 
@@ -237,4 +239,4 @@ with col2:
         """)
 
 st.markdown("---")
-st.markdown("<p style='text-align: center; color: #666; font-size: 0.9rem'>© 2026古建筑屋顶智能识别系统 | 传承中式美学 · 赋能文化数字化</p >", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #666; font-size: 0.9rem'>© 2026古建筑屋顶智能识别系统 | 传承中式美学 · 赋能文化数字化</p>", unsafe_allow_html=True)
