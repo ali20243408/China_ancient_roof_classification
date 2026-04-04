@@ -61,6 +61,7 @@ st.markdown(
         min-height: 235px !important;
     }}
 
+    /* 恢复棕框+白框之间的木纹纹路 */
     .stImage {{
         border: 8px solid #8B5A2B !important;
         border-radius: 12px !important;
@@ -71,10 +72,10 @@ st.markdown(
         background-image: repeating-linear-gradient(
             45deg,
             rgba(139, 90, 43, 0.1),
-            rgba139, 90, 43, 0.1) 10px,
-            rgba160, 110, 60, 0.05) 10px,
-            rgba160, 110, 60, 0.05) 20px
-    !important;
+            rgba(139, 90, 43, 0.1) 10px,
+            rgba(160, 110, 60, 0.05) 10px,
+            rgba(160, 110, 60, 0.05) 20px
+        ) !important;
     }}
     .stImage img {{
         border-radius: 4px !important;
@@ -94,8 +95,8 @@ st.markdown(
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
     }}
     .stButton>button:hover {{
-        background-color: rgba180, 140, 100, 0.4) !important;
-        border-color: rgba139, 119, 101, 0.7) !important;
+        background-color: rgba(180, 140, 100, 0.4) !important;
+        border-color: rgba(139, 119, 101, 0.7) !important;
         transform: translateY(-2px) !important;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
     }}
@@ -113,7 +114,7 @@ st.markdown(
         background-color: transparent !important;
     }}
     [data-testid="stSidebar"] [data-testid="stNav"] a[aria-current="page"] {{
-        background-color: rgba180, 140, 100, 0.2) !important;
+        background-color: rgba(180, 140, 100, 0.2) !important;
         color: #5D4037 !important;
         font-weight: bold !important;
         font-family: WenQuanYi Zen Hei !important;
