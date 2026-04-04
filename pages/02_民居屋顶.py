@@ -4,12 +4,16 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
+# --------------------------
 # 页面配置
+# --------------------------
 st.set_page_config(page_title="中国古代民居建筑样式屋顶可视化系统", layout="wide")
 plt.rcParams["font.sans-serif"] = ["SimHei"]
 plt.rcParams["axes.unicode_minus"] = False
 
+# --------------------------
 # 【全局样式】
+# --------------------------
 st.markdown("""
 <style>
 /* 整体页面背景 */
@@ -41,7 +45,7 @@ div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) img {
     object-fit:contain !important;
     margin:0 auto 10px auto !important;
 }
-/* 左边三个图片白色边框 */
+/* 左边三个图片（第1,2,3列）白色边框 */
 div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) > div:nth-child(1) img,
 div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) > div:nth-child(2) img,
 div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) > div:nth-child(3) img {
@@ -49,7 +53,7 @@ div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) > div:nth-child(3) 
     border-radius: 6px !important;
     box-sizing: border-box !important;
 }
-/* 右边三个图片蓝色边框 */
+/* 右边三个图片（第4,5,6列）蓝色边框 */
 div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) > div:nth-child(4) img,
 div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) > div:nth-child(5) img,
 div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) > div:nth-child(6) img {
@@ -62,7 +66,7 @@ div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) button {
     width:100% !important;
 }
 
-/* 只控制民居自己内部6个按钮 */
+/* 👇 只控制民居自己内部6个按钮，不影响主页 👇 */
 div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) button {
     border-radius: 8px !important;
     font-weight: bold !important;
@@ -113,7 +117,7 @@ div[data-testid="stHorizontalBlock"]:has(> div:nth-child(6)) button:hover {
 st.markdown('<div class="top-main-title">中国古代民居建筑样式屋顶可视化系统</div>', unsafe_allow_html=True)
 
 # --------------------------
-# 屋顶数据【你原来写的文案一字没改】
+# 屋顶数据（不变）
 # --------------------------
 roof_info = {
     "燕尾脊顶": {
@@ -162,7 +166,7 @@ roof_info = {
 def load_data():
     df = pd.read_excel("data/民居.xlsx")
     df_sankey = pd.read_excel("data/民居总.xlsx")
-    url = "https://geo.datav.aliyun.com/100000_full.json"
+    url = "https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json"
     china = gpd.read_file(url)
     return df, df_sankey, china
 
@@ -209,9 +213,11 @@ st.markdown("---")
 selected = st.session_state.current_page
 
 if selected != "总览":
+    # 一级标题：深色无背景
     st.markdown(f'<div class="primary-title">{selected}</div>', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # 二级标题：白色+背景
     col_sub1, col_sub2, col_sub3 = st.columns([3, 3, 2])
     with col_sub1:
         st.markdown('<div class="secondary-title">地域分布密度图</div>', unsafe_allow_html=True)
@@ -247,13 +253,14 @@ if selected != "总览":
         st.image(roof_info[selected]["imgs"][1], use_container_width=True)
 
 else:
-    # 总览页面
+    # ========= 总览页面 =========
     st.markdown('<div class="primary-title">总览</div>', unsafe_allow_html=True)
 
     col_sankey, col_info = st.columns([3, 2])
 
     with col_sankey:
         st.markdown('<div class="secondary-title">🔗 屋顶样式-子区域-南北方 分布流向</div>', unsafe_allow_html=True)
+        # 桑基图代码
         sankey_data = df_sankey.groupby(["屋顶样式", "子区域", "地域"]).size().reset_index(name="value")
         labels = []
         roof_labels = sankey_data["屋顶样式"].unique().tolist()
@@ -297,7 +304,6 @@ else:
         for _, row in sankey_data.iterrows():
             link_colors.append(str(region_color_map[row["子区域"]]).replace("1.0","0.7"))
 
-        # 仅修复语法错误，其余全保留原样
         fig = go.Figure(go.Sankey(
             arrangement="snap",
             node=dict(pad=20, thickness=20, line=dict(color="#f7f0e6", width=0.3), label=labels, color=node_colors),
