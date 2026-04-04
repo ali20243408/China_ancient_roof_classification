@@ -4,32 +4,32 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.graph_objects as go
 
-# ====================== 页面基础配置 ======================
+# 页面基础配置
 st.set_page_config(page_title="园林屋顶样式可视化", layout="wide")
 
-# 全局字体防乱码
+# Matplotlib中文防乱码设置
 plt.rcParams["font.sans-serif"] = ["SimHei"]
 plt.rcParams["axes.unicode_minus"] = False
 
-# 页面背景 + 小标题背景 + 大标题颜色 + 按钮样式 + 图片边框
+# 全局页面样式美化
 st.markdown("""
 <style>
 /* 整体页面底色 */
 .stApp {
     background-color: #878162;
 }
-/* 屋顶选型 / 特色形制 小标题底色 */
+/* 小标题底色样式 */
 .stColumn h3 {
     background-color: #676B56 !important;
     color: white !important;
     padding: 6px 12px !important;
     border-radius: 6px !important;
 }
-/* 所有大标题文字颜色 #685542 */
+/* 一级二级大标题文字色 */
 h1, h2 {
     color: #685542 !important;
 }
-/* 按钮样式：背景色 #C8A16D，文字深棕色 #685542 */
+/* 按钮默认样式 */
 .stButton > button {
     background-color: #C8A16D !important;
     color: #685542 !important;
@@ -40,8 +40,7 @@ h1, h2 {
 .stButton > button:hover {
     background-color: #b8915d !important;
 }
-
-/* 图片统一加边框：颜色 #4A5B5E */
+/* 全局图片边框样式 */
 img {
     border: 3px solid #4A5B5E !important;
     border-radius: 8px !important;
@@ -51,14 +50,14 @@ img {
 </style>
 """, unsafe_allow_html=True)
 
-# ========== 顶部标题 & 简介 ==========
+# 顶部主标题
 st.title("中国古典园林屋顶数据可视化系统")
 
-# ====================== 读取Excel ======================
+# 读取园林Excel数据源
 df = pd.read_excel("data/园林总.xlsx")
 build_types = ["亭", "阁", "榭", "轩", "馆", "廊"]
 
-# ====================== 绘图函数 ======================
+# 柱状图绘制封装函数
 def make_bar(roof_type, df_data, b_types, palette):
     sub_df = df_data[df_data["屋顶类型"] == roof_type]
     cnt = sub_df["建筑类型"].value_counts().reset_index(name="数量")
@@ -77,10 +76,10 @@ def make_bar(roof_type, df_data, b_types, palette):
     plt.tight_layout()
     return fig
 
-# ====================== 三栏布局 ======================
+# 左中右三栏主体布局
 col_left, col_mid, col_right = st.columns([1, 2, 1])
 
-# 左侧菜单
+# 左侧屋顶选型导航
 with col_left:
     st.subheader("屋顶选型")
     st.write("")
@@ -103,7 +102,7 @@ with col_left:
     if st.button("勾连搭顶", key="goul"):
         st.session_state.view = "勾连搭顶"
 
-# 右侧菜单
+# 右侧特色形制导航
 with col_right:
     st.subheader("特色形制")
     st.write("")
@@ -126,7 +125,7 @@ with col_right:
     if st.button("整体总览", key="all_view"):
         st.session_state.view = "总览"
 
-# 中间交互区
+# 中间核心内容动态渲染区
 with col_mid:
     if "view" not in st.session_state:
         st.session_state.view = "总览"
@@ -172,7 +171,7 @@ with col_mid:
                 val.append(1)
                 clr.append(color_map[roof_type])
 
-            # 桑基图背景与页面完全一致，融为一体
+            # 绘制园林屋顶-建筑桑基流向图
             fig_s = go.Figure(go.Sankey(
                 node=dict(
                     label=roof_list + build_list,
@@ -195,7 +194,7 @@ with col_mid:
         except Exception as e:
             st.info(f"桑基图展示: {e}")
 
-        # 整体总览：图片左对齐，文字在右侧
+        # 总览卷棚顶图文介绍区
         col_img, col_text = st.columns([1, 1.5])
         with col_img:
             st.image("photos/image3/卷棚顶1.jpg", width=400)
