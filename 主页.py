@@ -1,14 +1,15 @@
 import streamlit as st
 from pathlib import Path
+import base64
 
-# 全局配置
+# 页面基础全局配置
 st.set_page_config(
     page_title="古建筑屋顶可视化平台",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# -------------------------- 路径 --------------------------
+# 项目资源路径定义
 current_dir = Path(__file__).parent
 bg_img_path = current_dir / "photos" / "images4" / "背景.jpg"
 font_path = current_dir / "fonts" / "HongLeiBanShuJianTi-2.ttf"
@@ -20,22 +21,19 @@ img_paths = [
     current_dir / "photos" / "images4" / "ai识别.jpg"
 ]
 
-# -------------------------- 工具函数 --------------------------
+# Base64编码工具函数
 def get_base64(file_path):
-    import base64
     with open(file_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-# -------------------------- 样式：增加云端通用中文字体后备，原有样式丝毫不改 --------------------------
+# 全局页面样式与字体美化
 st.markdown(
     f"""
     <style>
-    /* 全局页面默认文字后备系统中文字体，云端不崩中文 */
     * {{
         font-family: WenQuanYi Zen Hei, WenQuanYi Micro Hei, SimHei, STKaiti, KaiTi, serif !important;
     }}
 
-    /* 1. 背景样式（完全保留原样） */
     .stApp {{
         background-image: url("data:image/jpg;base64,{get_base64(bg_img_path)}") !important;
         background-size: cover !important;
@@ -63,7 +61,6 @@ st.markdown(
         min-height: 235px !important;
     }}
 
-    /* 2. 图片木质画框（原样保留） */
     .stImage {{
         border: 8px solid #8B5A2B !important;
         border-radius: 12px !important;
@@ -77,7 +74,7 @@ st.markdown(
             rgba139, 90, 43, 0.1) 10px,
             rgba160, 110, 60, 0.05) 10px,
             rgba160, 110, 60, 0.05) 20px
-        !important;
+    !important;
     }}
     .stImage img {{
         border-radius: 4px !important;
@@ -85,7 +82,6 @@ st.markdown(
         width: 100% !important;
     }}
 
-    /* 3. 按钮样式不变，补字体后备 */
     .stButton>button {{
         width: 100% !important;
         background-color: rgba(180, 140, 100, 0.25) !important;
@@ -98,13 +94,12 @@ st.markdown(
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
     }}
     .stButton>button:hover {{
-        background-color: rgba(180, 140, 100, 0.4) !important;
+        background-color: rgba180, 140, 100, 0.4) !important;
         border-color: rgba139, 119, 101, 0.7) !important;
         transform: translateY(-2px) !important;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
     }}
 
-    /* 4. 侧边导航原样保留+字体兜底 */
     [data-testid="stSidebar"] {{
         background-color: rgba(253, 249, 242, 1) !important;
         border: none !important;
@@ -118,7 +113,7 @@ st.markdown(
         background-color: transparent !important;
     }}
     [data-testid="stSidebar"] [data-testid="stNav"] a[aria-current="page"] {{
-        background-color: rgba(180, 140, 100, 0.2) !important;
+        background-color: rgba180, 140, 100, 0.2) !important;
         color: #5D4037 !important;
         font-weight: bold !important;
         font-family: WenQuanYi Zen Hei !important;
@@ -128,7 +123,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# 本地手写字体加载完全保留，找不到就自动用系统WenQuanYi兜底
+# 加载自定义手写字体
 if font_path.exists():
     st.markdown(
         f"""
@@ -142,7 +137,7 @@ if font_path.exists():
         unsafe_allow_html=True
     )
 
-# -------------------------- 页面主体原样不动 --------------------------
+# 主页主体布局与页面跳转
 st.title("中国古建筑屋顶多维度可视化综合平台")
 st.markdown('<div class="spacer"></div>', unsafe_allow_html=True)
 
