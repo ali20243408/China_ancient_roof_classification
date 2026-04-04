@@ -67,7 +67,7 @@ div[data-testid="stVerticalBlock"] .element-container:nth-last-child(2) {
     border-radius: 4px !important;
     color: #4A2E2A !important;
     font-weight: bold !important;
-    font-family: "SimHei", "KaiTi" !important;
+    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi" !important;
     font-size: 14px !important;
 }
 .stButton > button:hover {
@@ -83,7 +83,7 @@ div[data-testid="stVerticalBlock"] .element-container:nth-last-child(2) {
     color: #8B4513 !important;
     text-align: center !important;
     margin-bottom: 24px !important;
-    font-family: "SimHei", "KaiTi", "STSong" !important;
+    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi", "STSong" !important;
     letter-spacing: 3px !important;
 }
 /* 图表标题样式：深色底白字，同色系深棕 */
@@ -95,7 +95,7 @@ div[data-testid="stVerticalBlock"] .element-container:nth-last-child(2) {
     padding: 8px 15px !important;
     border-radius: 4px !important;
     margin-bottom: 15px !important;
-    font-family: "SimHei", "KaiTi" !important;
+    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi" !important;
 }
 /* 中间区域标题样式 */
 .title {
@@ -103,26 +103,26 @@ div[data-testid="stVerticalBlock"] .element-container:nth-last-child(2) {
     font-weight: bold !important;
     color: #8B4513 !important;
     margin-bottom: 15px !important;
-    font-family: "SimHei", "KaiTi" !important;
+    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi" !important;
 }
 .analysis {
     font-size: 14px !important;
     color: #5C3317 !important;
     line-height: 1.6 !important;
-    font-family: "SimHei", "KaiTi" !important;
+    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi" !important;
     padding: 10px !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ------------------------------
-# 解决Matplotlib中文乱码
+# 【已修复】Matplotlib云端通用中文字体
 # ------------------------------
-plt.rcParams["font.sans-serif"] = ["SimHei", "WenQuanYi Micro Hei", "Heiti TC"]
+plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "WenQuanYi Micro Hei", "SimHei", "DejaVu Sans"]
 plt.rcParams["axes.unicode_minus"] = False
 
 # ------------------------------
-# 顶部大标题（文字内容不变，只变大）
+# 顶部大标题
 # ------------------------------
 st.markdown('<p class="main_title"> 六大主流官式屋顶样式 映射中国古代封建等级制度文化</p >', unsafe_allow_html=True)
 
@@ -166,7 +166,7 @@ if "selected" not in st.session_state:
 col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 
 # ------------------------------
-# 左侧1：饼图
+# 左侧1：饼图（字体已改云端兼容）
 # ------------------------------
 with col_left:
     with st.container(border=False):
@@ -187,7 +187,7 @@ with col_left:
             autopct="%1.2f%%",
             startangle=90,
             wedgeprops={"linewidth":2, "edgecolor":"white"},
-            textprops={"fontsize": 8, "family": "SimHei", "color": "#333"}
+            textprops={"fontsize": 8, "family": "WenQuanYi Zen Hei", "color": "#333"}
         )
         for autotexts in autotexts:
             autotexts.set_color("white")
@@ -197,7 +197,7 @@ with col_left:
         st.markdown("""<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""", unsafe_allow_html=True)
 
 # ------------------------------
-# 左侧2：故宫屋顶等级-数量与占比
+# 左侧2：故宫屋顶等级-数量与占比（Plotly字体已修复）
 # ------------------------------
     with st.container(border=False):
         st.markdown('<p class="chart_title">故宫屋顶等级-数量与占比</p >', unsafe_allow_html=True)
@@ -213,7 +213,7 @@ with col_left:
         fig2.update_layout(
             height=320,
             xaxis_tickangle=-45,
-            font=dict(family="SimHei"),
+            font=dict(family="WenQuanYi Zen Hei"),
             legend=dict(orientation="h", y=1.02),
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
@@ -269,7 +269,7 @@ with col_mid:
             st.warning(f"未找到真实图片：{real_img_path}")
 
 # ------------------------------
-# 右侧1：六大建筑群屋顶全景对比
+# 右侧1：六大建筑群屋顶全景对比（Plotly字体修复）
 # ------------------------------
 with col_right:
     with st.container(border=False):
@@ -279,7 +279,7 @@ with col_right:
             {"屋顶样式": "重檐歇山顶", "故宫":9,"沈阳故宫":3,"王府":1,"南阳府衙":0,"直隶总督署":0,"平遥县衙":0},
             {"屋顶样式": "单檐庑殿顶", "故宫":7,"沈阳故宫":2,"王府":2,"南阳府衙":0,"直隶总督署":0,"平遥县衙":0},
             {"屋顶样式": "单檐歇山顶", "故宫":14,"沈阳故宫":10,"王府":8,"南阳府衙":3,"直隶总督署":4,"平遥县衙":2},
-            {"屋顶样式": "悬山顶", "故宫":22,"沈阳故宫":16,"王府":15,"南阳府衙":12,"直隶总督署":10,"平遥县衙":9},
+            {"悬山顶": "悬山顶", "故宫":22,"沈阳故宫":16,"王府":15,"南阳府衙":12,"直隶总督署":10,"平遥县衙":9},
             {"屋顶样式": "硬山顶", "故宫":38,"沈阳故宫":32,"王府":42,"南阳府衙":45,"直隶总督署":40,"平遥县衙":48},
         ]).melt(id_vars=["屋顶样式"], var_name="建筑群", value_name="数量")
         palace_colors = {
@@ -294,16 +294,16 @@ with col_right:
         fig3.update_layout(
             height=320,
             xaxis_tickangle=-45,
-            font=dict(family="SimHei"),
+            font=dict(family="WenQuanYi Zen Hei"),
             legend=dict(orientation="v", y=0.5, x=-0.25, xanchor="right"),
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
         st.plotly_chart(fig3, use_container_width=True)
-        st.markdown("""<div class="analysis"><b>分析：</b><br>高等级屋顶（重檐庑殿顶、重檐歇山顶）仅存于故宫与沈阳故宫，体现皇家建筑的等级特权；地方衙署以硬山顶、悬山顶为主，横向对比映射等级规制。</div>""", unsafe_allow_html=True)
+        st.markdown("""<div class="analysis"><b>分析：</b><br>高等级屋顶（重檐庑殿顶、重檐歇山顶）仅存于故宫与沈阳故宫，体现皇家建筑的等级特权；地方衙署以硬山、悬山为主，横向对比映射等级规制。</div>""", unsafe_allow_html=True)
 
 # ------------------------------
-# 右侧2：屋顶等级结构占比
+# 右侧2：屋顶等级结构占比（Plotly字体修复）
 # ------------------------------
     with st.container(border=False):
         st.markdown('<p class="chart_title">屋顶等级结构占比</p >', unsafe_allow_html=True)
@@ -320,7 +320,7 @@ with col_right:
         fig4.update_layout(
             height=320,
             xaxis_tickangle=-45,
-            font=dict(family="SimHei"),
+            font=dict(family="WenQuanYi Zen Hei"),
             legend=dict(orientation="v", y=0.5, x=-0.25, xanchor="right"),
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"

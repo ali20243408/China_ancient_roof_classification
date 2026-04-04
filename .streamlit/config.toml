@@ -6,7 +6,8 @@ primaryColor = "#8B4513"  # 故宫红/棕色调
 backgroundColor = "#F5F0E6"  # 米黄色背景
 secondaryBackgroundColor = "#E8DCC8"
 textColor = "#333333"
-font = "sans serif"
+# 仅修改这一行：把 sans serif 换成云端通用开源中文字体
+font = "WenQuanYi Zen Hei"
 
 [server]
 headless = true

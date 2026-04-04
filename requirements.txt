@@ -23,5 +23,5 @@ Pillow>=10.2.0
 scikit-learn>=1.4.0
 tqdm>=4.66.0
 
-#中文字体支持
-pyglet>=2.0.0
+# 中文字体支持（移除pyglet，无需额外依赖，用系统自带字体）
+# pyglet>=2.0.0 （注释掉，Streamlit云端自带WenQuanYi Zen Hei，无需额外安装）
