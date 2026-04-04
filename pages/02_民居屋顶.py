@@ -1,20 +1,3 @@
-# 🔥 全局强制中文字体（必须放在文件最开头，所有import之前）
-import matplotlib.pyplot as plt
-# 1. 强制Matplotlib优先使用云端Linux预装的文泉驿微米黑
-plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
-plt.rcParams["axes.unicode_minus"] = False  # 解决负号方块
-plt.rcParams["font.family"] = "WenQuanYi Micro Hei"  # 强制默认字体族
-plt.rcParams["font.size"] = 10  # 统一字体大小，避免渲染异常
-
-# 2. 强制Plotly全局字体（桑基图、柱状图）
-import plotly.io as pio
-pio.templates["custom_font"] = pio.templates["plotly"]
-pio.templates["custom_font"].layout.font.update(
-    family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif",
-    size=12,
-    color="#333333"
-)
-pio.templates.default = "custom_font"
 import streamlit as st
 import pandas as pd
 import geopandas as gpd
@@ -252,26 +235,13 @@ if selected != "总览":
         fig, ax = plt.subplots(figsize=(10, 7), dpi=120)
         fig.patch.set_facecolor('#c4d2db')
         ax.set_facecolor('#c4d2db')
-
-        # 1. 先绘图（保留你所有原有参数，去掉prop，避免报错）
-        # 绘图
         china_with_data.plot(
             ax=ax, column="count", cmap=roof_info[selected]["cmap"],
             vmin=0, vmax=prov_count["count"].max() if not prov_count.empty else 1,
             edgecolor="white", linewidth=0.5, legend=True,
             legend_kwds={"label": "建筑数量", "shrink": 0.6}
         )
-        # 给标题强制字体
-        ax.set_title(f"{selected} 分布密度", fontsize=14, color='#3c5c5e', fontfamily="WenQuanYi Micro Hei")
-        # 给图例强制字体
-        if ax.get_legend():
-            ax.get_legend().set_fontproperties(plt.FontProperties(family="WenQuanYi Micro Hei"))
-            for text in ax.get_legend().get_texts():
-                text.set_fontfamily("WenQuanYi Micro Hei")
-        # 遍历所有文本，强制改字体
-        for text in fig.findobj(plt.Text):
-            text.set_fontfamily("WenQuanYi Micro Hei")
-
+        ax.set_title(f"{selected} 分布密度", fontsize=14, color='#3c5c5e')
         ax.set_axis_off()
         st.pyplot(fig)
 

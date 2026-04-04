@@ -1,20 +1,3 @@
-# 🔥 全局强制中文字体（必须放在文件最开头，所有import之前）
-import matplotlib.pyplot as plt
-# 1. 强制Matplotlib优先使用云端Linux预装的文泉驿微米黑
-plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
-plt.rcParams["axes.unicode_minus"] = False  # 解决负号方块
-plt.rcParams["font.family"] = "WenQuanYi Micro Hei"  # 强制默认字体族
-plt.rcParams["font.size"] = 10  # 统一字体大小，避免渲染异常
-
-# 2. 强制Plotly全局字体（桑基图、柱状图）
-import plotly.io as pio
-pio.templates["custom_font"] = pio.templates["plotly"]
-pio.templates["custom_font"].layout.font.update(
-    family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei, sans-serif",
-    size=12,
-    color="#333333"
-)
-pio.templates.default = "custom_font"
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -187,17 +170,15 @@ col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 # ------------------------------
 with col_left:
     with st.container(border=False):
-        st.markdown('<p class="chart_title">故宫屋顶样式占比</p>', unsafe_allow_html=True)
+        st.markdown('<p class="chart_title">故宫屋顶样式占比</p >', unsafe_allow_html=True)
         labels = button_order
         sizes = roof_counts
         red_palette = ["#8B0000", "#A52A2A", "#B22222", "#CD5C5C", "#F08080", "#FA8072"]
         explode = [0.0]*6
         if st.session_state.selected is not None:
             explode[labels.index(st.session_state.selected)] = 0.1
-
         fig, ax = plt.subplots(figsize=(8,8), facecolor="#E8D9C0")
         ax.set_facecolor("#E8D9C0")
-
         wedges, texts, autotexts = ax.pie(
             sizes,
             explode=explode,
@@ -205,22 +186,12 @@ with col_left:
             colors=red_palette,
             autopct="%1.2f%%",
             startangle=90,
-            wedgeprops={"linewidth": 2, "edgecolor": "white"},
-            # 👇 核心：强制指定文泉驿，优先级最高
-            textprops={"fontsize": 10, "family": "WenQuanYi Micro Hei", "color": "#333"}
+            wedgeprops={"linewidth":2, "edgecolor":"white"},
+            textprops={"fontsize": 8, "family": "SimHei", "color": "#333"}
         )
-        # 给百分比标签二次强制
-        for autotext in autotexts:
-            autotext.set_color("white")
-            autotext.set_fontweight("bold")
-            autotext.set_fontfamily("WenQuanYi Micro Hei")
-        # 给标签二次强制
-        for text in texts:
-            text.set_fontfamily("WenQuanYi Micro Hei")
-        # 终极兜底：遍历图表所有文本，强制改字体
-        for text in fig.findobj(plt.Text):
-            text.set_fontfamily("WenQuanYi Micro Hei")
-
+        for autotexts in autotexts:
+            autotexts.set_color("white")
+            autotexts.set_fontweight("bold")
         ax.axis("equal")
         st.pyplot(fig)
         st.markdown("""<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""", unsafe_allow_html=True)

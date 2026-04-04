@@ -1,17 +1,3 @@
-# ====================== 全局中文乱码修复（必须放在文件最开头） ======================
-import matplotlib.pyplot as plt
-plt.rcParams["font.sans-serif"] = ["WenQuanYi Micro Hei", "SimHei", "Microsoft YaHei"]
-plt.rcParams["axes.unicode_minus"] = False
-plt.rcParams["font.family"] = "WenQuanYi Micro Hei"
-
-import plotly.io as pio
-pio.templates["custom_font"] = pio.templates["plotly"]
-pio.templates["custom_font"].layout.font.update(
-    family="WenQuanYi Micro Hei, SimHei, Microsoft YaHei",
-    size=12
-)
-pio.templates.default = "custom_font"
-# ========================================================================
 # 1. 最顶部：屏蔽所有警告（包含Streamlit废弃参数警告）
 import warnings
 warnings.filterwarnings("ignore")
