@@ -168,16 +168,21 @@ col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 # ------------------------------
 # 左侧1：饼图（字体已改云端兼容）
 # ------------------------------
+# ------------------------------
+# 左侧1：饼图（已修复云端中文）
+# ------------------------------
 with col_left:
     with st.container(border=False):
         st.markdown('<p class="chart_title">故宫屋顶样式占比</p >', unsafe_allow_html=True)
         labels = button_order
         sizes = roof_counts
         red_palette = ["#8B0000", "#A52A2A", "#B22222", "#CD5C5C", "#F08080", "#FA8072"]
-        explode = [0.0]*6
+        explode = [0.0] * 6
         if st.session_state.selected is not None:
             explode[labels.index(st.session_state.selected)] = 0.1
-        fig, ax = plt.subplots(figsize=(8,8), facecolor="#E8D9C0")
+
+        # 【关键修复】强制指定饼图字体，确保云端生效
+        fig, ax = plt.subplots(figsize=(8, 8), facecolor="#E8D9C0")
         ax.set_facecolor("#E8D9C0")
         wedges, texts, autotexts = ax.pie(
             sizes,
@@ -186,16 +191,29 @@ with col_left:
             colors=red_palette,
             autopct="%1.2f%%",
             startangle=90,
-            wedgeprops={"linewidth":2, "edgecolor":"white"},
-            textprops={"fontsize": 8, "family": "WenQuanYi Zen Hei", "color": "#333"}
+            wedgeprops={"linewidth": 2, "edgecolor": "white"},
+            # 【核心修改】明确指定云端通用字体，兜底多字体
+            textprops={
+                "fontsize": 8,
+                "family": "WenQuanYi Zen Hei",
+                "color": "#333",
+                "weight": "normal"
+            }
         )
-        for autotexts in autotexts:
-            autotexts.set_color("white")
-            autotexts.set_fontweight("bold")
+        # 【额外兜底】单独给百分比标签设置字体
+        for autotext in autotexts:
+            autotext.set_color("white")
+            autotext.set_fontweight("bold")
+            autotext.set_fontfamily("WenQuanYi Zen Hei")
+        # 【额外兜底】给标签文本设置字体
+        for text in texts:
+            text.set_fontfamily("WenQuanYi Zen Hei")
+
         ax.axis("equal")
         st.pyplot(fig)
-        st.markdown("""<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""", unsafe_allow_html=True)
-
+        st.markdown(
+            """<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""",
+            unsafe_allow_html=True)
 # ------------------------------
 # 左侧2：故宫屋顶等级-数量与占比（Plotly字体已修复）
 # ------------------------------
