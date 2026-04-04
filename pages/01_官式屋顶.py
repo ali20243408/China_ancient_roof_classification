@@ -4,7 +4,10 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
-
+# 【全局Matplotlib中文修复，必须放在代码最顶部】
+import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'WenQuanYi Micro Hei', 'SimHei', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False
 # ------------------------------
 # 页面配置
 # ------------------------------
@@ -165,11 +168,9 @@ if "selected" not in st.session_state:
 # ------------------------------
 col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 
+
 # ------------------------------
-# 左侧1：饼图（字体已改云端兼容）
-# ------------------------------
-# ------------------------------
-# 左侧1：饼图（已修复云端中文）
+# 左侧1：饼图（终极修复，双重兜底，云端必显中文）
 # ------------------------------
 with col_left:
     with st.container(border=False):
@@ -181,9 +182,15 @@ with col_left:
         if st.session_state.selected is not None:
             explode[labels.index(st.session_state.selected)] = 0.1
 
-        # 【关键修复】强制指定饼图字体，确保云端生效
+        # 【第一步：强制重置Matplotlib全局字体，确保饼图读取】
+        plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'WenQuanYi Micro Hei', 'SimHei', 'DejaVu Sans']
+        plt.rcParams['axes.unicode_minus'] = False
+
+        # 【第二步：创建画布，强制指定字体】
         fig, ax = plt.subplots(figsize=(8, 8), facecolor="#E8D9C0")
         ax.set_facecolor("#E8D9C0")
+
+        # 【第三步：饼图绘制，三重字体兜底】
         wedges, texts, autotexts = ax.pie(
             sizes,
             explode=explode,
@@ -192,22 +199,22 @@ with col_left:
             autopct="%1.2f%%",
             startangle=90,
             wedgeprops={"linewidth": 2, "edgecolor": "white"},
-            # 【核心修改】明确指定云端通用字体，兜底多字体
             textprops={
                 "fontsize": 8,
-                "family": "WenQuanYi Zen Hei",
+                "fontfamily": "WenQuanYi Zen Hei",  # 核心：强制指定云端字体
                 "color": "#333",
-                "weight": "normal"
+                "fontweight": "normal"
             }
         )
-        # 【额外兜底】单独给百分比标签设置字体
+
+        # 【第四步：单独给标签+百分比设置字体，彻底兜底】
+        for text in texts:
+            text.set_fontfamily("WenQuanYi Zen Hei")
+            text.set_fontsize(8)
         for autotext in autotexts:
             autotext.set_color("white")
             autotext.set_fontweight("bold")
             autotext.set_fontfamily("WenQuanYi Zen Hei")
-        # 【额外兜底】给标签文本设置字体
-        for text in texts:
-            text.set_fontfamily("WenQuanYi Zen Hei")
 
         ax.axis("equal")
         st.pyplot(fig)
