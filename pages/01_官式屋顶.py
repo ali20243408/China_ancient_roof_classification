@@ -7,18 +7,26 @@ import matplotlib.pyplot as plt
 from matplotlib import font_manager
 import os
 
-# ====================== 【终极修复：强制嵌入本地字体文件】 ======================
-# 1. 构建字体文件路径（根目录下的 simhei.ttf）
-font_path = os.path.join(os.path.dirname(__file__), "simhei.ttf")
+# ====================== 【路径终极修复：不管在哪都能找到字体】 ======================
+# 1. 先获取项目根目录绝对路径（Streamlit云端固定为 /mount/src/你的仓库名）
+repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+# 2. 拼接字体的绝对路径
+font_path = os.path.join(repo_root, "simhei.ttf")
 
-# 2. 强制添加这个字体到 Matplotlib
-font_manager.fontManager.addfont(font_path)
+# 3. 容错加载：找到字体用SimHei，找不到用云端通用字体
+try:
+    if os.path.exists(font_path):
+        font_manager.fontManager.addfont(font_path)
+        plt.rcParams['font.sans-serif'] = ['SimHei']
+    else:
+        # 兜底：用Streamlit云端自带的开源中文字体
+        plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'DejaVu Sans']
+except Exception as e:
+    # 极端情况兜底
+    plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
 
-# 3. 全局设定，必须使用这个字体
-plt.rcParams['font.sans-serif'] = ['SimHei']  # 直接指定我们嵌入的字体名
-plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示
 # ======================================================================
-
 # ------------------------------
 # 页面配置
 # ------------------------------
