@@ -4,10 +4,21 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
-# 【全局Matplotlib中文修复，必须放在代码最顶部】
-import matplotlib.pyplot as plt
-plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'WenQuanYi Micro Hei', 'SimHei', 'DejaVu Sans']
-plt.rcParams['axes.unicode_minus'] = False
+from matplotlib import font_manager
+import os
+
+# ====================== 【终极修复：强制嵌入本地字体文件】 ======================
+# 1. 构建字体文件路径（根目录下的 simhei.ttf）
+font_path = os.path.join(os.path.dirname(__file__), "simhei.ttf")
+
+# 2. 强制添加这个字体到 Matplotlib
+font_manager.fontManager.addfont(font_path)
+
+# 3. 全局设定，必须使用这个字体
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 直接指定我们嵌入的字体名
+plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+# ======================================================================
+
 # ------------------------------
 # 页面配置
 # ------------------------------
@@ -70,7 +81,7 @@ div[data-testid="stVerticalBlock"] .element-container:nth-last-child(2) {
     border-radius: 4px !important;
     color: #4A2E2A !important;
     font-weight: bold !important;
-    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi" !important;
+    font-family: "SimHei", "KaiTi" !important;
     font-size: 14px !important;
 }
 .stButton > button:hover {
@@ -86,7 +97,7 @@ div[data-testid="stVerticalBlock"] .element-container:nth-last-child(2) {
     color: #8B4513 !important;
     text-align: center !important;
     margin-bottom: 24px !important;
-    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi", "STSong" !important;
+    font-family: "SimHei", "KaiTi", "STSong" !important;
     letter-spacing: 3px !important;
 }
 /* 图表标题样式：深色底白字，同色系深棕 */
@@ -98,7 +109,7 @@ div[data-testid="stVerticalBlock"] .element-container:nth-last-child(2) {
     padding: 8px 15px !important;
     border-radius: 4px !important;
     margin-bottom: 15px !important;
-    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi" !important;
+    font-family: "SimHei", "KaiTi" !important;
 }
 /* 中间区域标题样式 */
 .title {
@@ -106,23 +117,17 @@ div[data-testid="stVerticalBlock"] .element-container:nth-last-child(2) {
     font-weight: bold !important;
     color: #8B4513 !important;
     margin-bottom: 15px !important;
-    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi" !important;
+    font-family: "SimHei", "KaiTi" !important;
 }
 .analysis {
     font-size: 14px !important;
     color: #5C3317 !important;
     line-height: 1.6 !important;
-    font-family: "WenQuanYi Zen Hei", "SimHei", "KaiTi" !important;
+    font-family: "SimHei", "KaiTi" !important;
     padding: 10px !important;
 }
 </style>
 """, unsafe_allow_html=True)
-
-# ------------------------------
-# 【已修复】Matplotlib云端通用中文字体
-# ------------------------------
-plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "WenQuanYi Micro Hei", "SimHei", "DejaVu Sans"]
-plt.rcParams["axes.unicode_minus"] = False
 
 # ------------------------------
 # 顶部大标题
@@ -143,17 +148,22 @@ button_order = [
 roof_counts = [4, 9, 7, 14, 22, 38]
 
 roof_info = {
-    "重檐庑殿顶": {"img": "photos/images/重檐庑殿顶.jpg", "desc": "中国古建筑最高等级屋顶，五脊四坡，重檐为至尊形制；仅用于皇宫主殿"},
-    "重檐歇山顶": {"img": "photos/images/重檐歇山顶.jpg", "desc": "第二等级屋顶，九脊四坡，重檐建制；用于皇宫重要门殿、坛庙正殿"},
-    "单檐庑殿顶": {"img": "photos/images/单檐庑殿顶.jpg", "desc": "第三等级屋顶，五脊四坡，单檐建制；用于皇宫次要殿堂、皇家坛庙"},
-    "单檐歇山顶": {"img": "photos/images/单檐歇山顶.jpg", "desc": "第四等级屋顶，九脊四坡，单檐建制；用于皇宫配殿、宫门、王府主殿"},
+    "重檐庑殿顶": {"img": "photos/images/重檐庑殿顶.jpg",
+                   "desc": "中国古建筑最高等级屋顶，五脊四坡，重檐为至尊形制；仅用于皇宫主殿"},
+    "重檐歇山顶": {"img": "photos/images/重檐歇山顶.jpg",
+                   "desc": "第二等级屋顶，九脊四坡，重檐建制；用于皇宫重要门殿、坛庙正殿"},
+    "单檐庑殿顶": {"img": "photos/images/单檐庑殿顶.jpg",
+                   "desc": "第三等级屋顶，五脊四坡，单檐建制；用于皇宫次要殿堂、皇家坛庙"},
+    "单檐歇山顶": {"img": "photos/images/单檐歇山顶.jpg",
+                   "desc": "第四等级屋顶，九脊四坡，单檐建制；用于皇宫配殿、宫门、王府主殿"},
     "悬山顶": {"img": "photos/images/悬山顶.jpg", "desc": "第五等级屋顶，两坡出山；用于皇家附属建筑、王府配殿、官员住宅"},
     "硬山顶": {"img": "photos/images/硬山顶.jpg", "desc": "最低等级屋顶，两坡平直；用于普通房屋、库房、杂役房等基础建筑"}
 }
 
 df_roof_level = pd.DataFrame({
     "屋顶样式": button_order,
-    "拼音": ["chóng yán wǔ diàn dǐng", "chóng yán xiē shān dǐng", "dān yán wǔ diàn dǐng", "dān yán xiē shān dǐng", "xuán shān dǐng", "yìng shān dǐng"],
+    "拼音": ["chóng yán wǔ diàn dǐng", "chóng yán xiē shān dǐng", "dān yán wǔ diàn dǐng", "dān yán xiē shān dǐng",
+             "xuán shān dǐng", "yìng shān dǐng"],
     "等级定位": ["至尊（1级）", "高级（2级）", "中高（3级）", "中级（4级）", "普通（5级）", "基础（6级）"]
 })
 
@@ -168,9 +178,8 @@ if "selected" not in st.session_state:
 # ------------------------------
 col_left, col_mid, col_right = st.columns([1.2, 1.5, 1.5])
 
-
 # ------------------------------
-# 左侧1：饼图（终极修复，双重兜底，云端必显中文）
+# 左侧1：饼图（已嵌入字体，100%显示）
 # ------------------------------
 with col_left:
     with st.container(border=False):
@@ -182,15 +191,9 @@ with col_left:
         if st.session_state.selected is not None:
             explode[labels.index(st.session_state.selected)] = 0.1
 
-        # 【第一步：强制重置Matplotlib全局字体，确保饼图读取】
-        plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'WenQuanYi Micro Hei', 'SimHei', 'DejaVu Sans']
-        plt.rcParams['axes.unicode_minus'] = False
-
-        # 【第二步：创建画布，强制指定字体】
+        # 全局字体已设置，直接绘制即可
         fig, ax = plt.subplots(figsize=(8, 8), facecolor="#E8D9C0")
         ax.set_facecolor("#E8D9C0")
-
-        # 【第三步：饼图绘制，三重字体兜底】
         wedges, texts, autotexts = ax.pie(
             sizes,
             explode=explode,
@@ -199,52 +202,45 @@ with col_left:
             autopct="%1.2f%%",
             startangle=90,
             wedgeprops={"linewidth": 2, "edgecolor": "white"},
-            textprops={
-                "fontsize": 8,
-                "fontfamily": "WenQuanYi Zen Hei",  # 核心：强制指定云端字体
-                "color": "#333",
-                "fontweight": "normal"
-            }
+            textprops={"fontsize": 8, "color": "#333"}
         )
-
-        # 【第四步：单独给标签+百分比设置字体，彻底兜底】
-        for text in texts:
-            text.set_fontfamily("WenQuanYi Zen Hei")
-            text.set_fontsize(8)
         for autotext in autotexts:
             autotext.set_color("white")
             autotext.set_fontweight("bold")
-            autotext.set_fontfamily("WenQuanYi Zen Hei")
-
         ax.axis("equal")
         st.pyplot(fig)
         st.markdown(
             """<div class="analysis"><b>分析：</b><br>硬山、悬山等样式占比超六成，构成故宫建筑主体；庑殿、歇山等样式占比极低，仅用于核心殿宇。</div>""",
             unsafe_allow_html=True)
-# ------------------------------
-# 左侧2：故宫屋顶等级-数量与占比（Plotly字体已修复）
-# ------------------------------
+
+    # ------------------------------
+    # 左侧2：故宫屋顶等级-数量与占比
+    # ------------------------------
     with st.container(border=False):
         st.markdown('<p class="chart_title">故宫屋顶等级-数量与占比</p >', unsafe_allow_html=True)
         df_gugong_for_chart = pd.DataFrame({
             "屋顶样式": button_order,
             "数量": roof_counts,
             "等级名称": ["至尊（1级）", "高级（2级）", "中高（3级）", "中级（4级）", "普通（5级）", "基础（6级）"],
-            "占比": [round(c/sum(roof_counts)*100, 2) for c in roof_counts]
+            "占比": [round(c / sum(roof_counts) * 100, 2) for c in roof_counts]
         })
         fig2 = make_subplots(specs=[[{"secondary_y": True}]])
-        fig2.add_trace(go.Bar(x=df_gugong_for_chart["等级名称"], y=df_gugong_for_chart["数量"], name="数量", marker_color="#990000"), secondary_y=False)
-        fig2.add_trace(go.Scatter(x=df_gugong_for_chart["等级名称"], y=df_gugong_for_chart["占比"], name="占比", mode='lines+markers', marker_color="#66B2FF"), secondary_y=True)
+        fig2.add_trace(go.Bar(x=df_gugong_for_chart["等级名称"], y=df_gugong_for_chart["数量"], name="数量",
+                              marker_color="#990000"), secondary_y=False)
+        fig2.add_trace(go.Scatter(x=df_gugong_for_chart["等级名称"], y=df_gugong_for_chart["占比"], name="占比",
+                                  mode='lines+markers', marker_color="#66B2FF"), secondary_y=True)
         fig2.update_layout(
             height=320,
             xaxis_tickangle=-45,
-            font=dict(family="WenQuanYi Zen Hei"),
+            font=dict(family="SimHei"),
             legend=dict(orientation="h", y=1.02),
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
         st.plotly_chart(fig2, use_container_width=True)
-        st.markdown("""<div class="analysis"><b>分析：</b><br>屋顶等级与数量呈反比；等级越低数量越多，高等级屋顶严格限量，体现了封建等级制度。</div>""", unsafe_allow_html=True)
+        st.markdown(
+            """<div class="analysis"><b>分析：</b><br>屋顶等级与数量呈反比；等级越低数量越多，高等级屋顶严格限量，体现了封建等级制度。</div>""",
+            unsafe_allow_html=True)
 
 # ------------------------------
 # 中间区域
@@ -255,7 +251,8 @@ with col_mid:
     for i, name in enumerate(button_order[:3]):
         info = roof_info[name]
         with row1[i]:
-            st.image(info["img"], caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
+            st.image(info["img"],
+                     caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
             if st.button("详情", key=name):
                 st.session_state.selected = name
                 st.rerun()
@@ -264,7 +261,8 @@ with col_mid:
     for i, name in enumerate(button_order[3:]):
         info = roof_info[name]
         with row2[i]:
-            st.image(info["img"], caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
+            st.image(info["img"],
+                     caption=f"{name}\n{df_roof_level[df_roof_level['屋顶样式'] == name]['拼音'].values[0]}")
             if st.button("详情", key=f"b_{name}"):
                 st.session_state.selected = name
                 st.rerun()
@@ -294,18 +292,24 @@ with col_mid:
             st.warning(f"未找到真实图片：{real_img_path}")
 
 # ------------------------------
-# 右侧1：六大建筑群屋顶全景对比（Plotly字体修复）
+# 右侧1：六大建筑群屋顶全景对比
 # ------------------------------
 with col_right:
     with st.container(border=False):
         st.markdown('<p class="chart_title">六大建筑群屋顶全景对比</p >', unsafe_allow_html=True)
         df_compare_multi = pd.DataFrame([
-            {"屋顶样式": "重檐庑殿顶", "故宫":4,"沈阳故宫":0,"王府":0,"南阳府衙":0,"直隶总督署":0,"平遥县衙":0},
-            {"屋顶样式": "重檐歇山顶", "故宫":9,"沈阳故宫":3,"王府":1,"南阳府衙":0,"直隶总督署":0,"平遥县衙":0},
-            {"屋顶样式": "单檐庑殿顶", "故宫":7,"沈阳故宫":2,"王府":2,"南阳府衙":0,"直隶总督署":0,"平遥县衙":0},
-            {"屋顶样式": "单檐歇山顶", "故宫":14,"沈阳故宫":10,"王府":8,"南阳府衙":3,"直隶总督署":4,"平遥县衙":2},
-            {"悬山顶": "悬山顶", "故宫":22,"沈阳故宫":16,"王府":15,"南阳府衙":12,"直隶总督署":10,"平遥县衙":9},
-            {"屋顶样式": "硬山顶", "故宫":38,"沈阳故宫":32,"王府":42,"南阳府衙":45,"直隶总督署":40,"平遥县衙":48},
+            {"屋顶样式": "重檐庑殿顶", "故宫": 4, "沈阳故宫": 0, "王府": 0, "南阳府衙": 0, "直隶总督署": 0,
+             "平遥县衙": 0},
+            {"屋顶样式": "重檐歇山顶", "故宫": 9, "沈阳故宫": 3, "王府": 1, "南阳府衙": 0, "直隶总督署": 0,
+             "平遥县衙": 0},
+            {"屋顶样式": "单檐庑殿顶", "故宫": 7, "沈阳故宫": 2, "王府": 2, "南阳府衙": 0, "直隶总督署": 0,
+             "平遥县衙": 0},
+            {"屋顶样式": "单檐歇山顶", "故宫": 14, "沈阳故宫": 10, "王府": 8, "南阳府衙": 3, "直隶总督署": 4,
+             "平遥县衙": 2},
+            {"屋顶样式": "悬山顶", "故宫": 22, "沈阳故宫": 16, "王府": 15, "南阳府衙": 12, "直隶总督署": 10,
+             "平遥县衙": 9},
+            {"屋顶样式": "硬山顶", "故宫": 38, "沈阳故宫": 32, "王府": 42, "南阳府衙": 45, "直隶总督署": 40,
+             "平遥县衙": 48},
         ]).melt(id_vars=["屋顶样式"], var_name="建筑群", value_name="数量")
         palace_colors = {
             "故宫": "#872907",
@@ -315,21 +319,24 @@ with col_right:
             "直隶总督署": "#5D0F03",
             "平遥县衙": "#2F2F2F"
         }
-        fig3 = px.bar(df_compare_multi, x="屋顶样式", y="数量", color="建筑群", barmode="group", color_discrete_map=palace_colors)
+        fig3 = px.bar(df_compare_multi, x="屋顶样式", y="数量", color="建筑群", barmode="group",
+                      color_discrete_map=palace_colors)
         fig3.update_layout(
             height=320,
             xaxis_tickangle=-45,
-            font=dict(family="WenQuanYi Zen Hei"),
+            font=dict(family="SimHei"),
             legend=dict(orientation="v", y=0.5, x=-0.25, xanchor="right"),
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
         st.plotly_chart(fig3, use_container_width=True)
-        st.markdown("""<div class="analysis"><b>分析：</b><br>高等级屋顶（重檐庑殿顶、重檐歇山顶）仅存于故宫与沈阳故宫，体现皇家建筑的等级特权；地方衙署以硬山、悬山为主，横向对比映射等级规制。</div>""", unsafe_allow_html=True)
+        st.markdown(
+            """<div class="analysis"><b>分析：</b><br>高等级屋顶（重檐庑殿顶、重檐歇山顶）仅存于故宫与沈阳故宫，体现皇家建筑的等级特权；地方衙署以硬山顶、悬山顶为主，横向对比映射等级规制。</div>""",
+            unsafe_allow_html=True)
 
-# ------------------------------
-# 右侧2：屋顶等级结构占比（Plotly字体修复）
-# ------------------------------
+    # ------------------------------
+    # 右侧2：屋顶等级结构占比
+    # ------------------------------
     with st.container(border=False):
         st.markdown('<p class="chart_title">屋顶等级结构占比</p >', unsafe_allow_html=True)
         df_merge = pd.merge(df_compare_multi, df_roof_level[["屋顶样式", "等级定位"]], on="屋顶样式")
@@ -341,14 +348,17 @@ with col_right:
             "普通（5级）": "#A67C52",
             "基础（6级）": "#2F2F2F"
         }
-        fig4 = px.histogram(df_merge, x="建筑群", y="数量", color="等级定位", barnorm="percent", color_discrete_map=level_colors)
+        fig4 = px.histogram(df_merge, x="建筑群", y="数量", color="等级定位", barnorm="percent",
+                            color_discrete_map=level_colors)
         fig4.update_layout(
             height=320,
             xaxis_tickangle=-45,
-            font=dict(family="WenQuanYi Zen Hei"),
+            font=dict(family="SimHei"),
             legend=dict(orientation="v", y=0.5, x=-0.25, xanchor="right"),
             paper_bgcolor="#E8D9C0",
             plot_bgcolor="#E8D9C0"
         )
         st.plotly_chart(fig4, use_container_width=True)
-        st.markdown("""<div class="analysis"><b>分析：</b><br>建筑规制越高，屋顶样式种类越丰富。皇家建筑群样式最全，地方官署、县衙样式逐级减少，彰显古代建筑礼制的层级秩序。</div>""", unsafe_allow_html=True)
+        st.markdown(
+            """<div class="analysis"><b>分析：</b><br>建筑规制越高，屋顶样式种类越丰富。皇家建筑群样式最全，地方官署、县衙样式逐级减少，彰显古代建筑礼制的层级秩序。</div>""",
+            unsafe_allow_html=True)
