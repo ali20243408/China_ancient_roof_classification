@@ -61,7 +61,6 @@ st.markdown(
         min-height: 235px !important;
     }}
 
-    /* 恢复棕框+白框之间的木纹纹路 */
     .stImage {{
         border: 8px solid #8B5A2B !important;
         border-radius: 12px !important;
